@@ -3,1370 +3,950 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Ronne Home Solutions, LLC | Honest, Affordable Home Improvement in West Michigan</title>
+<title>Ronne Home Solutions, LLC | West Michigan Home Improvement</title>
 <meta name="description" content="Honest, affordable home improvement in West Michigan. Licensed & insured. Serving the lakeshore to Grand Rapids."/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@1,400;1,700&display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-:root {
-  --clay: #B8693F;
-  --clay-light: #C97B50;
-  --gold: #C9920A;
-  --ink: #181816;
-  --ink2: #3A3A36;
-  --muted: #7A7870;
-  --bg: #F8F6F1;
-  --bg2: #F0EBE2;
-  --border: #DDD6C8;
-  --white: #FEFEFC;
+:root{
+  --clay:#B8693F;--gold:#C9920A;
+  --ink:#181816;--ink2:#3D3D39;--muted:#888278;
+  --bg:#F7F4EF;--bg2:#EDE8DF;--white:#FEFEFC;
+  --border:#DDD6C6;
 }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased;}
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body {
-  background: var(--bg);
-  color: var(--ink);
-  font-family: 'Inter', sans-serif;
-  overflow-x: hidden;
-  cursor: none;
-  -webkit-font-smoothing: antialiased;
+/* ── mix-blend cursor ── */
+#cur{
+  position:fixed;top:0;left:0;z-index:9999;pointer-events:none;
+  width:28px;height:28px;border-radius:50%;
+  background:#fff;mix-blend-mode:difference;
+  transform:translate(-50%,-50%) scale(1);
+  will-change:transform;
+  transition:width .25s,height .25s;
 }
+#cur.big{width:80px;height:80px;}
+@media(hover:none){#cur{display:none;}body{cursor:auto;}}
 
-/* ── Cursor ── */
-#cur-dot {
-  width: 7px; height: 7px;
-  background: var(--clay);
-  border-radius: 50%;
-  position: fixed; top: 0; left: 0;
-  pointer-events: none; z-index: 9999;
-  transform: translate(-50%,-50%);
-  will-change: transform;
-}
-#cur-ring {
-  width: 38px; height: 38px;
-  border: 1.5px solid rgba(184,105,63,.35);
-  border-radius: 50%;
-  position: fixed; top: 0; left: 0;
-  pointer-events: none; z-index: 9998;
-  transform: translate(-50%,-50%);
-  transition: width .3s, height .3s, border-color .25s, background .25s;
-  will-change: transform;
-}
-.cursor-hover #cur-dot { opacity: 0; }
-.cursor-hover #cur-ring {
-  width: 70px; height: 70px;
-  background: rgba(184,105,63,.08);
-  border-color: var(--clay);
-}
-@media (hover:none) { #cur-dot, #cur-ring { display:none; } body { cursor:auto; } }
-
-/* ── Progress bar ── */
-#progress {
-  position: fixed; top: 0; left: 0; height: 2px; width: 0%;
-  background: linear-gradient(90deg, var(--clay), var(--gold));
-  z-index: 10000; transition: width .1s linear;
-}
+/* ── Progress ── */
+#bar{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,var(--clay),var(--gold));z-index:10000;}
 
 /* ── Scrollbar ── */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--bg2); }
-::-webkit-scrollbar-thumb { background: var(--clay); }
-
-/* ── Logo ── */
-.logo-path {
-  stroke-dasharray: 320; stroke-dashoffset: 320;
-  animation: draw 1.2s cubic-bezier(.4,0,.2,1) .1s forwards;
-}
-.logo-path-2 {
-  stroke-dasharray: 320; stroke-dashoffset: 320;
-  animation: draw 1.2s cubic-bezier(.4,0,.2,1) .28s forwards;
-}
-@keyframes draw { to { stroke-dashoffset: 0; } }
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-thumb{background:var(--clay);}
 
 /* ── Navbar ── */
-#navbar {
-  position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
-  z-index: 200;
-  width: calc(100% - 48px); max-width: 1240px;
-  background: rgba(248,246,241,.0);
-  border: 1px solid transparent;
-  border-radius: 0;
-  transition: background .4s, border-color .4s, box-shadow .4s, border-radius .4s;
-  backdrop-filter: blur(0px);
+#nav{
+  position:fixed;top:18px;left:50%;transform:translateX(-50%);
+  width:calc(100% - 48px);max-width:1280px;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 24px;
+  background:transparent;border:1px solid transparent;
+  transition:background .4s,border-color .4s,box-shadow .4s;
+  border-radius:3px;
 }
-#navbar.scrolled {
-  background: rgba(248,246,241,.96);
-  border-color: var(--border);
-  box-shadow: 0 4px 40px rgba(0,0,0,.07);
-  border-radius: 4px;
-  backdrop-filter: blur(12px);
-}
-.nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; }
-.nav-link {
-  font-size: .72rem; font-weight: 500; letter-spacing: .12em;
-  text-transform: uppercase; color: var(--ink2);
-  position: relative; cursor: pointer;
-  transition: color .2s;
-  text-decoration: none;
-}
-.nav-link::after {
-  content: ''; position: absolute; bottom: -3px; left: 0;
-  width: 0; height: 1px; background: var(--clay);
-  transition: width .3s cubic-bezier(.4,0,.2,1);
-}
-.nav-link:hover { color: var(--ink); }
-.nav-link:hover::after { width: 100%; }
+#nav.solid{background:rgba(247,244,239,.95);border-color:var(--border);box-shadow:0 4px 32px rgba(0,0,0,.06);backdrop-filter:blur(12px);}
+.nl{font-size:.68rem;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--ink2);text-decoration:none;position:relative;transition:color .2s;}
+.nl::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--clay);transition:width .3s;}
+.nl:hover{color:var(--ink);}
+.nl:hover::after{width:100%;}
+
+/* ── Logo anim ── */
+.lp{stroke-dasharray:330;stroke-dashoffset:330;animation:draw 1.2s cubic-bezier(.4,0,.2,1) .1s forwards;}
+.lp2{stroke-dasharray:330;stroke-dashoffset:330;animation:draw 1.2s cubic-bezier(.4,0,.2,1) .25s forwards;}
+@keyframes draw{to{stroke-dashoffset:0;}}
 
 /* ── Buttons ── */
-.btn-primary {
-  display: inline-flex; align-items: center; gap: 10px;
-  background: var(--ink); color: var(--white);
-  padding: 14px 28px;
-  font-size: .72rem; font-weight: 600; letter-spacing: .14em;
-  text-transform: uppercase; cursor: pointer;
-  position: relative; overflow: hidden;
-  transition: transform .25s, box-shadow .25s;
-  text-decoration: none;
-  border: none;
+.bclay{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--clay);color:#fff;
+  padding:13px 26px;font-size:.68rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;
+  cursor:pointer;text-decoration:none;border:none;position:relative;overflow:hidden;
+  transition:transform .25s,box-shadow .25s;
 }
-.btn-primary::before {
-  content: ''; position: absolute; inset: 0;
-  background: var(--clay);
-  transform: scaleX(0); transform-origin: left;
-  transition: transform .35s cubic-bezier(.4,0,.2,1);
-}
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,.15); }
-.btn-primary:hover::before { transform: scaleX(1); }
-.btn-primary span, .btn-primary svg { position: relative; z-index: 1; }
+.bclay::before{content:'';position:absolute;inset:0;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.4,0,.2,1);}
+.bclay:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(184,105,63,.3);}
+.bclay:hover::before{transform:scaleX(1);}
+.bclay span,.bclay svg{position:relative;z-index:1;}
 
-.btn-ghost {
-  display: inline-flex; align-items: center; gap: 8px;
-  border: 1px solid var(--border); color: var(--ink);
-  padding: 13px 26px;
-  font-size: .72rem; font-weight: 600; letter-spacing: .14em;
-  text-transform: uppercase; cursor: pointer;
-  transition: border-color .25s, background .25s, transform .25s;
-  text-decoration: none;
-  background: transparent;
+.boutline{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid var(--border);color:var(--ink);
+  padding:12px 24px;font-size:.68rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;
+  cursor:pointer;text-decoration:none;background:transparent;
+  transition:border-color .25s,background .25s,color .25s,transform .25s;
 }
-.btn-ghost:hover {
-  border-color: var(--ink);
-  background: var(--ink);
-  color: var(--white);
-  transform: translateY(-2px);
-}
+.boutline:hover{border-color:var(--ink);background:var(--ink);color:#fff;transform:translateY(-2px);}
 
-.btn-clay {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: var(--clay); color: #fff;
-  padding: 14px 28px;
-  font-size: .72rem; font-weight: 600; letter-spacing: .14em;
-  text-transform: uppercase; cursor: pointer;
-  position: relative; overflow: hidden;
-  transition: transform .25s, box-shadow .25s;
-  text-decoration: none; border: none;
-}
-.btn-clay::before {
-  content: ''; position: absolute; inset: 0;
-  background: var(--gold);
-  transform: scaleX(0); transform-origin: left;
-  transition: transform .35s cubic-bezier(.4,0,.2,1);
-}
-.btn-clay:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(184,105,63,.3); }
-.btn-clay:hover::before { transform: scaleX(1); }
-.btn-clay span { position: relative; z-index: 1; }
+/* ── Reveal ── */
+.ru{opacity:0;transform:translateY(44px);transition:opacity .75s cubic-bezier(.16,1,.3,1),transform .75s cubic-bezier(.16,1,.3,1);}
+.rl{opacity:0;transform:translateX(-44px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.rr{opacity:0;transform:translateX(44px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.rs{opacity:0;transform:scale(.94);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.in{opacity:1!important;transform:none!important;}
+.d1{transition-delay:.06s!important}.d2{transition-delay:.13s!important}.d3{transition-delay:.2s!important}
+.d4{transition-delay:.27s!important}.d5{transition-delay:.34s!important}.d6{transition-delay:.41s!important}
+@media(prefers-reduced-motion:reduce){.ru,.rl,.rr,.rs{opacity:1;transform:none;transition:none;}}
 
-/* ── Reveal animations ── */
-.reveal-up {
-  opacity: 0;
-  transform: translateY(48px);
-  transition: opacity .75s cubic-bezier(.16,1,.3,1), transform .75s cubic-bezier(.16,1,.3,1);
-}
-.reveal-up.in { opacity: 1; transform: translateY(0); }
+/* Clip-line text reveal */
+.cl{overflow:hidden;}
+.cl .i{display:block;transform:translateY(105%);transition:transform .8s cubic-bezier(.16,1,.3,1);}
+.cl.in .i{transform:translateY(0);}
 
-.reveal-left {
-  opacity: 0; transform: translateX(-50px);
-  transition: opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1);
-}
-.reveal-left.in { opacity: 1; transform: translateX(0); }
+/* ── Label ── */
+.lbl{display:inline-flex;align-items:center;gap:10px;font-size:.62rem;font-weight:700;letter-spacing:.26em;text-transform:uppercase;color:var(--clay);margin-bottom:18px;}
+.lbl::before{content:'';width:22px;height:1px;background:var(--clay);}
 
-.reveal-right {
-  opacity: 0; transform: translateX(50px);
-  transition: opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1);
-}
-.reveal-right.in { opacity: 1; transform: translateX(0); }
-
-.reveal-scale {
-  opacity: 0; transform: scale(.92);
-  transition: opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1);
-}
-.reveal-scale.in { opacity: 1; transform: scale(1); }
-
-/* Clip-path line reveal for headings */
-.clip-line { overflow: hidden; }
-.clip-line .inner {
-  display: block;
-  transform: translateY(110%);
-  transition: transform .8s cubic-bezier(.16,1,.3,1);
-}
-.clip-line.in .inner { transform: translateY(0); }
-
-.d1 { transition-delay: .05s !important; }
-.d2 { transition-delay: .12s !important; }
-.d3 { transition-delay: .19s !important; }
-.d4 { transition-delay: .26s !important; }
-.d5 { transition-delay: .33s !important; }
-.d6 { transition-delay: .4s !important; }
-.d7 { transition-delay: .47s !important; }
-.d8 { transition-delay: .54s !important; }
-
-@media (prefers-reduced-motion: reduce) {
-  .reveal-up, .reveal-left, .reveal-right, .reveal-scale { opacity:1; transform:none; transition:none; }
-  .clip-line .inner { transform:none; transition:none; }
-}
-
-/* ── Section label ── */
-.label {
-  display: inline-flex; align-items: center; gap: 10px;
-  font-size: .65rem; font-weight: 700; letter-spacing: .24em;
-  text-transform: uppercase; color: var(--clay);
-  margin-bottom: 20px;
-}
-.label::before { content: ''; width: 24px; height: 1px; background: var(--clay); }
-
-/* ── Marquee ── */
-.marquee-outer { overflow: hidden; }
-.marquee-inner { display: flex; animation: marquee 30s linear infinite; width: max-content; }
-.marquee-inner:hover { animation-play-state: paused; }
-@keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-
-/* ── Service cards ── */
-.svc-card {
-  position: relative; overflow: hidden; cursor: pointer;
-  background: #000;
-}
-.svc-card img {
-  width: 100%; height: 100%; object-fit: cover;
-  transition: transform .7s cubic-bezier(.4,0,.2,1), opacity .5s;
-  opacity: .88;
-}
-.svc-card:hover img { transform: scale(1.08); opacity: .72; }
-.svc-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(24,24,22,.9) 0%, transparent 55%);
-  padding: 28px;
-  display: flex; flex-direction: column; justify-content: flex-end;
-}
-.svc-num {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1rem; letter-spacing: .1em;
-  color: rgba(255,255,255,.35);
-  margin-bottom: 8px;
-}
-.svc-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.6rem; letter-spacing: .05em; color: #fff;
-  line-height: 1;
-}
-.svc-arrow {
-  position: absolute; top: 20px; right: 20px;
-  width: 36px; height: 36px; border-radius: 50%;
-  background: rgba(255,255,255,.12);
-  display: flex; align-items: center; justify-content: center;
-  transform: rotate(-45deg) scale(0);
-  transition: transform .35s cubic-bezier(.34,1.56,.64,1), background .25s;
-}
-.svc-card:hover .svc-arrow { transform: rotate(0deg) scale(1); background: var(--clay); }
+/* ── Image scale reveal ── */
+.ir{overflow:hidden;}
+.ir img{transform:scale(1.08);transition:transform .95s cubic-bezier(.16,1,.3,1);display:block;width:100%;height:100%;object-fit:cover;}
+.ir.in img{transform:scale(1);}
 
 /* ── Before/After ── */
-.ba-wrap { position: relative; overflow: hidden; cursor: col-resize; user-select: none; }
-.ba-after { position: absolute; inset: 0; clip-path: inset(0 50% 0 0); transition: clip-path .01s; }
-.ba-line { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: #fff; z-index: 8; transform: translateX(-50%); }
-.ba-btn {
-  position: absolute; top: 50%; left: 50%;
-  transform: translate(-50%,-50%);
-  width: 48px; height: 48px; border-radius: 50%;
-  background: #fff; box-shadow: 0 4px 24px rgba(0,0,0,.25);
-  display: flex; align-items: center; justify-content: center; z-index: 9;
-}
-.ba-label {
-  position: absolute; top: 14px;
-  font-size: .6rem; font-weight: 700; letter-spacing: .14em;
-  text-transform: uppercase; padding: 4px 10px;
-  border-radius: 2px;
-}
-.ba-label.before { left: 14px; background: rgba(0,0,0,.55); color: #fff; }
-.ba-label.after { right: 14px; background: var(--clay); color: #fff; }
+.ba{position:relative;overflow:hidden;cursor:col-resize;user-select:none;}
+.ba-after{position:absolute;inset:0;clip-path:inset(0 50% 0 0);}
+.ba-line{position:absolute;top:0;bottom:0;left:50%;width:2px;background:#fff;z-index:8;transform:translateX(-50%);}
+.ba-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;z-index:9;}
+.ba-tag{position:absolute;top:14px;font-size:.58rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:4px 10px;}
+.ba-tag.b{left:14px;background:rgba(0,0,0,.55);color:#fff;}
+.ba-tag.a{right:14px;background:var(--clay);color:#fff;}
 
 /* ── Gallery ── */
-.gal-item { overflow: hidden; position: relative; cursor: pointer; }
-.gal-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s cubic-bezier(.4,0,.2,1); }
-.gal-item:hover img { transform: scale(1.06); }
-.gal-cap {
-  position: absolute; inset: 0; background: rgba(24,24,22,.7);
-  display: flex; align-items: flex-end; padding: 18px;
-  opacity: 0; transform: translateY(8px);
-  transition: opacity .3s, transform .3s;
-}
-.gal-item:hover .gal-cap { opacity: 1; transform: translateY(0); }
+.gi{overflow:hidden;position:relative;cursor:pointer;}
+.gi img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s cubic-bezier(.4,0,.2,1);}
+.gi:hover img{transform:scale(1.07);}
+.gcap{position:absolute;inset:0;background:rgba(24,24,22,.72);display:flex;align-items:flex-end;padding:16px;opacity:0;transform:translateY(6px);transition:opacity .3s,transform .3s;}
+.gi:hover .gcap{opacity:1;transform:translateY(0);}
 
-/* ── Testimonial ── */
-.testi-card {
-  background: var(--white); border: 1px solid var(--border);
-  padding: 36px 32px;
-  transition: transform .3s, box-shadow .3s;
-}
-.testi-card:hover { transform: translateY(-5px); box-shadow: 0 20px 60px rgba(0,0,0,.07); }
-.testi-card.dark { background: var(--ink); border-color: var(--ink); }
+/* ── Testi ── */
+.tc{transition:transform .3s,box-shadow .3s;}
+.tc:hover{transform:translateY(-4px);box-shadow:0 18px 50px rgba(0,0,0,.07);}
 
-/* ── Stats ── */
-.stat-num {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(3rem,6vw,5.5rem);
-  line-height: 1;
-  background: linear-gradient(135deg, var(--ink) 0%, var(--clay) 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+/* ── Services hover-reveal ── */
+#svc-imgs{position:absolute;inset:0;pointer-events:none;}
+.svc-img{position:absolute;inset:0;clip-path:inset(0 0 100% 0);transition:clip-path .6s cubic-bezier(.4,0,.2,1);}
+.svc-img.show{clip-path:inset(0 0 0% 0);}
+.svc-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.svc-row{
+  display:flex;align-items:center;gap:16px;padding:28px 0;
+  border-bottom:1px solid var(--border);cursor:pointer;
+  position:relative;overflow:hidden;
+  transition:padding-left .35s cubic-bezier(.4,0,.2,1);
 }
+.svc-row::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--clay);transform:scaleY(0);transform-origin:bottom;transition:transform .35s cubic-bezier(.4,0,.2,1);}
+.svc-row:hover::before{transform:scaleY(1);}
+.svc-row:hover{padding-left:16px;}
+.svc-row .sn{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.08em;color:rgba(24,24,22,.25);transition:color .3s;min-width:36px;}
+.svc-row:hover .sn{color:var(--clay);}
+.svc-row .st{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,3.5vw,3rem);letter-spacing:.04em;color:var(--ink);line-height:1;transition:color .3s;}
+.svc-row:hover .st{color:var(--clay);}
+.svc-row .sa{margin-left:auto;font-size:.7rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);opacity:0;transform:translateX(-10px);transition:opacity .3s,transform .3s;}
+.svc-row:hover .sa{opacity:1;transform:translateX(0);}
 
-/* ── Process ── */
-.proc-line {
-  position: absolute; top: 28px; left: 50%; right: -50%;
-  height: 1px; background: var(--border);
-}
-
-/* ── Image reveal wrapper ── */
-.img-reveal { overflow: hidden; }
-.img-reveal img {
-  display: block;
-  transform: scale(1.06);
-  transition: transform .9s cubic-bezier(.16,1,.3,1);
-}
-.img-reveal.in img { transform: scale(1); }
-
-/* ── Noise texture ── */
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none; z-index: 1; opacity: .4;
-}
-
-/* ── Form ── */
-.field-wrap { position: relative; }
-.field-label {
-  position: absolute; left: 16px; top: 16px;
-  font-size: .75rem; font-weight: 500; letter-spacing: .06em;
-  color: var(--muted); pointer-events: none;
-  transition: transform .2s, font-size .2s, color .2s;
-  transform-origin: left;
-}
-.field-input {
-  width: 100%; padding: 24px 16px 8px;
-  background: var(--white); border: 1px solid var(--border);
-  color: var(--ink); font-family: 'Inter', sans-serif; font-size: .95rem;
-  outline: none; transition: border-color .2s, box-shadow .2s;
-}
-.field-input:focus { border-color: var(--clay); box-shadow: 0 0 0 3px rgba(184,105,63,.1); }
-.field-input:focus ~ .field-label,
-.field-input:not(:placeholder-shown) ~ .field-label {
-  transform: translateY(-10px) scale(.8);
-  color: var(--clay);
-}
-.field-input::placeholder { color: transparent; }
-textarea.field-input { resize: vertical; min-height: 120px; padding-top: 28px; }
+/* ── Form floating labels ── */
+.fw{position:relative;}
+.fi{width:100%;padding:22px 16px 8px;background:var(--white);border:1px solid var(--border);color:var(--ink);font-family:'Inter',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s,box-shadow .2s;border-radius:0;}
+.fi:focus{border-color:var(--clay);box-shadow:0 0 0 3px rgba(184,105,63,.1);}
+.fl{position:absolute;left:16px;top:15px;font-size:.75rem;font-weight:500;color:var(--muted);pointer-events:none;transition:transform .2s,font-size .2s,color .2s;transform-origin:left;}
+.fi:focus~.fl,.fi:not(:placeholder-shown)~.fl{transform:translateY(-9px) scale(.78);color:var(--clay);}
+.fi::placeholder{color:transparent;}
+textarea.fi{resize:vertical;min-height:110px;padding-top:26px;}
+select.fi{appearance:none;padding-top:16px;padding-bottom:8px;}
 
 /* ── Mobile menu ── */
-#mob-menu { max-height: 0; overflow: hidden; transition: max-height .4s cubic-bezier(.4,0,.2,1); }
-#mob-menu.open { max-height: 500px; }
+#mob{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.4,0,.2,1);}
+#mob.open{max-height:440px;}
 
-/* ── Hero mouse spotlight ── */
-#hero-spotlight {
-  position: absolute; inset: 0; pointer-events: none;
-  background: radial-gradient(600px circle at var(--mx,50%) var(--my,40%), rgba(184,105,63,.07), transparent 60%);
-}
+/* ── Stat numbers ── */
+.snum{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,8vw,7.5rem);line-height:1;color:#fff;}
+
+/* ── Scrollbar highlight ── */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:1;opacity:.35;}
 </style>
 </head>
 <body>
 
 <!-- Cursor -->
-<div id="cur-dot" aria-hidden="true"></div>
-<div id="cur-ring" aria-hidden="true"></div>
+<div id="cur" aria-hidden="true"></div>
 <!-- Progress -->
-<div id="progress" aria-hidden="true"></div>
+<div id="bar" aria-hidden="true"></div>
 
-<!-- ══════════════════════════════════
-     NAVBAR — floating pill
-══════════════════════════════════ -->
-<nav id="navbar" aria-label="Main navigation">
-  <div class="nav-inner">
-    <!-- Logo -->
-    <a href="#home" class="flex items-center gap-3 cursor-pointer" aria-label="Ronne Home Solutions" style="text-decoration:none">
-      <svg width="44" height="39" viewBox="0 0 104 92" fill="none" aria-hidden="true">
-        <polyline class="logo-path" points="6,82 38,8 70,82" stroke="#B8693F" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-        <polyline class="logo-path-2" points="28,82 60,14 98,82" stroke="#C9920A" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <div>
-        <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:.14em;font-size:1.05rem;line-height:1;color:var(--ink)">RONNE</div>
-        <div style="font-size:.5rem;letter-spacing:.24em;color:var(--muted);font-weight:600" class="uppercase">HOME SOLUTIONS, LLC</div>
-      </div>
-    </a>
-
-    <!-- Desktop nav -->
-    <div class="hidden md:flex items-center gap-8">
-      <a href="#services" class="nav-link">Services</a>
-      <a href="#work" class="nav-link">Our Work</a>
-      <a href="#about" class="nav-link">About</a>
-      <a href="#testimonials" class="nav-link">Reviews</a>
-      <a href="#contact" class="nav-link">Contact</a>
+<!-- ══════════════════════
+     NAVBAR
+══════════════════════ -->
+<nav id="nav" aria-label="Main navigation">
+  <!-- Logo -->
+  <a href="#home" style="display:flex;align-items:center;gap:12px;text-decoration:none" aria-label="Ronne Home Solutions">
+    <svg width="40" height="36" viewBox="0 0 104 92" fill="none" aria-hidden="true">
+      <polyline class="lp" points="6,82 38,8 70,82" stroke="#B8693F" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <polyline class="lp2" points="28,82 60,14 98,82" stroke="#C9920A" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div>
+      <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:.15em;font-size:1rem;line-height:1;color:var(--ink)">RONNE</div>
+      <div style="font-size:.48rem;letter-spacing:.24em;color:var(--muted);font-weight:600;text-transform:uppercase">HOME SOLUTIONS</div>
     </div>
+  </a>
 
-    <!-- CTA -->
-    <div class="hidden md:block">
-      <a href="#contact" class="btn-clay" style="padding:11px 22px;font-size:.65rem"><span>Free Estimate</span></a>
-    </div>
-
-    <!-- Hamburger -->
-    <button id="mob-btn" class="md:hidden cursor-pointer p-2 flex flex-col gap-1.5" aria-label="Toggle menu" aria-expanded="false">
-      <span class="w-5 h-px bg-[var(--ink)] block transition-all duration-300" id="h1"></span>
-      <span class="w-3.5 h-px bg-[var(--clay)] block ml-auto transition-all duration-300" id="h2"></span>
-      <span class="w-5 h-px bg-[var(--ink)] block transition-all duration-300" id="h3"></span>
-    </button>
+  <!-- Desktop links -->
+  <div class="hidden md:flex items-center gap-8">
+    <a href="#services" class="nl">Services</a>
+    <a href="#work" class="nl">Work</a>
+    <a href="#about" class="nl">About</a>
+    <a href="#testimonials" class="nl">Reviews</a>
+    <a href="#contact" class="nl">Contact</a>
   </div>
 
-  <!-- Mobile menu -->
-  <div id="mob-menu" class="bg-[var(--white)] border-t border-[var(--border)] px-6">
-    <div class="py-5 flex flex-col gap-4">
-      <a href="#services" class="nav-link py-1 cursor-pointer" onclick="closeMob()">Services</a>
-      <a href="#work" class="nav-link py-1 cursor-pointer" onclick="closeMob()">Our Work</a>
-      <a href="#about" class="nav-link py-1 cursor-pointer" onclick="closeMob()">About</a>
-      <a href="#testimonials" class="nav-link py-1 cursor-pointer" onclick="closeMob()">Reviews</a>
-      <a href="#contact" class="nav-link py-1 cursor-pointer" onclick="closeMob()">Contact</a>
-      <a href="#contact" class="btn-clay w-full text-center py-3 text-xs block mt-2" onclick="closeMob()"><span>Free Estimate</span></a>
-    </div>
+  <!-- CTA -->
+  <div class="hidden md:block">
+    <a href="#contact" class="bclay" style="padding:10px 20px;font-size:.62rem"><span>Free Estimate</span></a>
   </div>
+
+  <!-- Hamburger -->
+  <button id="mbt" class="md:hidden cursor-pointer p-2 flex flex-col gap-1.5" aria-label="Menu" aria-expanded="false">
+    <span class="w-5 h-px bg-[var(--ink)] block transition-all" id="hb1"></span>
+    <span class="w-3 h-px bg-[var(--clay)] block ml-auto transition-all" id="hb2"></span>
+    <span class="w-5 h-px bg-[var(--ink)] block transition-all" id="hb3"></span>
+  </button>
 </nav>
 
-<!-- ══════════════════════════════════
-     HERO
-══════════════════════════════════ -->
-<section id="home" class="min-h-screen flex items-center relative overflow-hidden bg-[var(--bg)] pt-24" aria-label="Hero">
-
-  <div id="hero-spotlight"></div>
-
-  <!-- Faint grid -->
-  <div class="absolute inset-0 pointer-events-none" style="background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:80px 80px;opacity:.3" aria-hidden="true"></div>
-
-  <!-- Large ghost number -->
-  <div class="absolute left-0 bottom-0 select-none pointer-events-none" aria-hidden="true">
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(18rem,38vw,42rem);line-height:.85;color:rgba(184,105,63,.035);letter-spacing:-.02em">01</div>
-  </div>
-
-  <div class="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-16 py-16">
-    <div class="grid lg:grid-cols-2 gap-16 items-center">
-
-      <!-- Left -->
-      <div>
-        <div class="label reveal-up">West Michigan · Since 2018</div>
-
-        <h1 style="font-family:'Bebas Neue',sans-serif;letter-spacing:.03em;line-height:.9" class="mb-6">
-          <div class="clip-line"><span class="inner" style="font-size:clamp(4rem,11vw,9.5rem);display:block;color:var(--ink)">RONNE</span></div>
-          <div class="clip-line d2"><span class="inner" style="font-size:clamp(1.4rem,3.5vw,3.2rem);display:block;letter-spacing:.14em;color:var(--clay)">HOME SOLUTIONS</span></div>
-        </h1>
-
-        <div class="reveal-up d3" style="width:48px;height:2px;background:linear-gradient(90deg,var(--clay),var(--gold));margin-bottom:24px"></div>
-
-        <p class="reveal-up d4 mb-10" style="font-size:1.1rem;line-height:1.7;color:var(--ink2);font-weight:300;max-width:440px">
-          Honest, affordable home improvement across <em style="font-family:'Playfair Display',serif;font-style:italic;color:var(--clay)">West Michigan</em> — from the lakeshore to Grand Rapids.
-        </p>
-
-        <div class="reveal-up d5 flex flex-wrap gap-4 mb-14">
-          <a href="#contact" class="btn-clay"><span>Get a Free Estimate</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="position:relative;z-index:1"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-          <a href="#work" class="btn-ghost">View Our Work</a>
-        </div>
-
-        <div class="reveal-up d6 flex flex-wrap gap-x-8 gap-y-3" style="font-size:.68rem;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;font-weight:500">
-          <span class="flex items-center gap-2">
-            <svg width="13" height="13" viewBox="0 0 20 20" fill="var(--clay)" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-            Licensed &amp; Insured
-          </span>
-          <span class="flex items-center gap-2">
-            <svg width="13" height="13" viewBox="0 0 20 20" fill="var(--clay)" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-            Free Estimates
-          </span>
-          <span class="flex items-center gap-2">
-            <svg width="13" height="13" viewBox="0 0 20 20" fill="var(--gold)" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-            5-Star Rated
-          </span>
-        </div>
-      </div>
-
-      <!-- Right: hero image -->
-      <div class="relative reveal-right">
-        <div class="img-reveal" style="aspect-ratio:4/5;max-height:70vh">
-          <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80" alt="Beautiful kitchen renovation by Ronne Home Solutions" loading="eager" style="width:100%;height:100%;object-fit:cover"/>
-        </div>
-        <!-- Floating badge -->
-        <div class="absolute -left-5 bottom-10 bg-[var(--white)] border border-[var(--border)] p-5 shadow-lg" style="max-width:200px">
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:2.4rem;color:var(--clay);line-height:1">150+</div>
-          <div style="font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-top:2px">Projects Completed</div>
-        </div>
-        <!-- Clay accent bar -->
-        <div style="position:absolute;top:0;right:-8px;width:4px;height:40%;background:linear-gradient(to bottom,var(--clay),var(--gold))"></div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Scroll cue -->
-  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 reveal-up d7" aria-hidden="true">
-    <span style="font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:600">Scroll</span>
-    <div style="width:1px;height:48px;background:linear-gradient(to bottom,var(--clay),transparent);animation:scrollPulse 1.8s ease-in-out infinite"></div>
-  </div>
-  <style>@keyframes scrollPulse{0%,100%{opacity:.3;transform:scaleY(.5);transform-origin:top}50%{opacity:1;transform:scaleY(1)}}</style>
-</section>
-
-<!-- ══════════════════════════════════
-     MARQUEE
-══════════════════════════════════ -->
-<div class="bg-[var(--ink)] py-4 overflow-hidden" aria-hidden="true">
-  <div class="marquee-outer">
-    <div class="marquee-inner">
-      <!-- repeated twice for seamless loop -->
-      <div class="flex items-center gap-0 whitespace-nowrap">
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.12em;color:rgba(255,255,255,.5);padding:0 32px">Flooring</span>
-        <span style="color:var(--clay);font-size:1rem">◆</span>
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.12em;color:rgba(255,255,255,.5);padding:0 32px">Tile Work</span>
-        <span style="color:var(--clay);font-size:1rem">◆</span>
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.12em;color:rgba(255,255,255,.5);padding:0 32px">Painting</span>
-        <span style="color:var(--clay);font-size:1rem">◆</span>
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.12em;color:rgba(255,255,255,.5);padding:0 32px">Drywall</span>
-        <span style="color:var(--clay);font-size:1rem">◆</span>
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.12em;color:rgba(255,255,255,.5);padding:0 32px">Trim &amp; Doors</span>
-        <span style="color:var(--clay);font-size:1rem">◆</span>
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.12em;color:rgba(255,255,255,.5);padding:0 32px">Basement Finishing</span>
-        <span style="color:var(--clay);font-size:1rem">◆</span>
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.12em;color:rgba(255,255,255,.5);padding:0 32px">Kitchen Remodel</span>
-        <span style="color:var(--clay);font-size:1rem">◆</span>
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.12em;color:rgba(255,255,255,.5);padding:0 32px">Bathroom Remodel</span>
-        <span style="color:var(--clay);font-size:1rem">◆</span>
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.12em;color:rgba(255,255,255,.5);padding:0 32px">General Repairs</span>
-        <span style="color:var(--clay);font-size:1rem">◆</span>
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.12em;color:rgba(255,255,255,.5);padding:0 32px">West Michigan Licensed</span>
-        <span style="color:var(--clay);font-size:1rem">◆</span>
-      </div>
-      <div class="flex items-center gap-0 whitespace-nowrap" aria-hidden="true">
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.12em;color:rgba(255,255,255,.5);padding:0 32px">Flooring</span>
-        <span style="color:var(--clay);font-size:1rem">◆</span>
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.12em;color:rgba(255,255,255,.5);padding:0 32px">Tile Work</span>
-        <span style="color:var(--clay);font-size:1rem">◆</span>
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.12em;color:rgba(255,255,255,.5);padding:0 32px">Painting</span>
-        <span style="color:var(--clay);font-size:1rem">◆</span>
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.12em;color:rgba(255,255,255,.5);padding:0 32px">Drywall</span>
-        <span style="color:var(--clay);font-size:1rem">◆</span>
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.12em;color:rgba(255,255,255,.5);padding:0 32px">Trim &amp; Doors</span>
-        <span style="color:var(--clay);font-size:1rem">◆</span>
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.12em;color:rgba(255,255,255,.5);padding:0 32px">Basement Finishing</span>
-        <span style="color:var(--clay);font-size:1rem">◆</span>
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.12em;color:rgba(255,255,255,.5);padding:0 32px">Kitchen Remodel</span>
-        <span style="color:var(--clay);font-size:1rem">◆</span>
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.12em;color:rgba(255,255,255,.5);padding:0 32px">Bathroom Remodel</span>
-        <span style="color:var(--clay);font-size:1rem">◆</span>
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.12em;color:rgba(255,255,255,.5);padding:0 32px">General Repairs</span>
-        <span style="color:var(--clay);font-size:1rem">◆</span>
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.12em;color:rgba(255,255,255,.5);padding:0 32px">West Michigan Licensed</span>
-        <span style="color:var(--clay);font-size:1rem">◆</span>
-      </div>
-    </div>
+<!-- Mobile menu -->
+<div id="mob" style="position:fixed;top:80px;left:24px;right:24px;z-index:190;background:var(--white);border:1px solid var(--border);box-shadow:0 16px 40px rgba(0,0,0,.08)">
+  <div style="padding:24px;display:flex;flex-direction:column;gap:16px">
+    <a href="#services" class="nl" onclick="cm()">Services</a>
+    <a href="#work" class="nl" onclick="cm()">Work</a>
+    <a href="#about" class="nl" onclick="cm()">About</a>
+    <a href="#testimonials" class="nl" onclick="cm()">Reviews</a>
+    <a href="#contact" class="nl" onclick="cm()">Contact</a>
+    <a href="#contact" class="bclay" style="text-align:center;justify-content:center;margin-top:8px" onclick="cm()"><span>Free Estimate</span></a>
   </div>
 </div>
 
-<!-- ══════════════════════════════════
-     STATS
-══════════════════════════════════ -->
-<section class="bg-[var(--white)] py-20 border-y border-[var(--border)]">
-  <div class="max-w-7xl mx-auto px-6 lg:px-16">
-    <div class="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-[var(--border)]">
-      <div class="p-8 lg:p-10 reveal-up">
-        <div class="stat-num" data-target="150" data-suffix="+">0</div>
-        <div style="font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-top:6px">Projects Done</div>
-      </div>
-      <div class="p-8 lg:p-10 reveal-up d2">
-        <div class="stat-num" data-target="100" data-suffix="%">0</div>
-        <div style="font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-top:6px">5-Star Reviews</div>
-      </div>
-      <div class="p-8 lg:p-10 reveal-up d3">
-        <div class="stat-num" data-target="7" data-suffix="+">0</div>
-        <div style="font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-top:6px">Years in Business</div>
-      </div>
-      <div class="p-8 lg:p-10 reveal-up d4">
-        <div class="stat-num" data-target="10" data-suffix=" mi">0</div>
-        <div style="font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-top:6px">Services Offered</div>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- ══════════════════════
+     HERO
+══════════════════════ -->
+<section id="home" style="min-height:100vh;display:flex;position:relative;overflow:hidden;background:var(--bg)" aria-label="Hero">
 
-<!-- ══════════════════════════════════
-     SERVICES
-══════════════════════════════════ -->
-<section id="services" class="py-28 bg-[var(--bg)]">
-  <div class="max-w-7xl mx-auto px-6 lg:px-16">
-    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-16">
-      <div>
-        <div class="label reveal-up">What We Do</div>
-        <h2 class="reveal-up d2" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2.8rem,6vw,5rem);letter-spacing:.03em;line-height:.95;color:var(--ink)">Our Services</h2>
+  <!-- Right: full-bleed image (absolute, takes up 58% right) -->
+  <div id="hero-img" style="position:absolute;right:0;top:0;bottom:0;width:60%;overflow:hidden" aria-hidden="true">
+    <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1200&q=85" alt="" style="width:100%;height:100%;object-fit:cover;transform:scale(1.06);transition:transform 1.2s cubic-bezier(.16,1,.3,1)" loading="eager" id="hero-photo"/>
+    <!-- Dark gradient overlap left -->
+    <div style="position:absolute;inset:0;background:linear-gradient(90deg,var(--bg) 0%,transparent 45%)"></div>
+  </div>
+
+  <!-- Rotated side text -->
+  <div style="position:absolute;right:16px;top:50%;transform:translateY(-50%) rotate(90deg);font-size:.55rem;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);font-weight:600;white-space:nowrap;z-index:10" aria-hidden="true">Licensed &amp; Insured · West Michigan</div>
+
+  <!-- Left: text content -->
+  <div style="position:relative;z-index:10;display:flex;align-items:center;width:100%;padding:140px 48px 80px;max-width:1280px;margin:0 auto">
+    <div style="max-width:600px">
+
+      <div class="lbl ru">West Michigan · Est. 2018</div>
+
+      <!-- Giant headline -->
+      <div style="margin-bottom:8px">
+        <div class="cl"><span class="i" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(5rem,14vw,12.5rem);line-height:.88;letter-spacing:.02em;color:var(--ink);display:block">RONNE</span></div>
       </div>
-      <p class="reveal-up d3 lg:max-w-xs" style="font-size:.9rem;line-height:1.7;color:var(--muted)">
-        Every project handled with care, skill, and honest pricing — no surprises, just results.
+      <div style="margin-bottom:0">
+        <div class="cl d1"><span class="i" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(1.4rem,3.8vw,3.4rem);line-height:1;letter-spacing:.18em;color:var(--clay);display:block">HOME SOLUTIONS</span></div>
+      </div>
+
+      <div style="width:52px;height:2px;background:linear-gradient(90deg,var(--clay),var(--gold));margin:28px 0 24px" class="ru d2"></div>
+
+      <p class="ru d3" style="font-size:1.05rem;line-height:1.75;color:var(--ink2);font-weight:300;max-width:400px;margin-bottom:36px">
+        Honest, affordable home improvement in <em style="font-family:'Playfair Display',serif;font-style:italic;color:var(--clay)">West Michigan</em> — from the lakeshore to Grand Rapids.
       </p>
-    </div>
 
-    <!-- Bento grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-
-      <!-- Card 1 — tall -->
-      <div class="svc-card reveal-scale" style="height:480px;grid-row:span 1">
-        <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=700&q=75" alt="Kitchen remodeling" loading="lazy"/>
-        <div class="svc-overlay">
-          <div class="svc-num">01</div>
-          <div class="svc-title">Kitchen<br/>Remodeling</div>
-        </div>
-        <div class="svc-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      <div class="ru d4" style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:48px">
+        <a href="#contact" class="bclay">
+          <span>Get Free Estimate</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="position:relative;z-index:1"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#work" class="boutline">See Our Work</a>
       </div>
 
-      <!-- Card 2 -->
-      <div class="svc-card reveal-scale d2" style="height:480px">
-        <img src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=700&q=75" alt="Bathroom renovation" loading="lazy"/>
-        <div class="svc-overlay">
-          <div class="svc-num">02</div>
-          <div class="svc-title">Bathroom<br/>Renovation</div>
-        </div>
-        <div class="svc-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-      </div>
-
-      <!-- Card 3 -->
-      <div class="svc-card reveal-scale d3" style="height:480px">
-        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=700&q=75" alt="Flooring installation" loading="lazy"/>
-        <div class="svc-overlay">
-          <div class="svc-num">03</div>
-          <div class="svc-title">Hardwood &amp;<br/>Tile Flooring</div>
-        </div>
-        <div class="svc-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-      </div>
-
-      <!-- Wide card -->
-      <div class="svc-card reveal-scale d2 md:col-span-2" style="height:320px">
-        <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1000&q=75" alt="Basement finishing" loading="lazy"/>
-        <div class="svc-overlay">
-          <div class="svc-num">04</div>
-          <div class="svc-title">Basement Finishing</div>
-        </div>
-        <div class="svc-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-      </div>
-
-      <!-- Card 5 -->
-      <div class="svc-card reveal-scale d4" style="height:320px">
-        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=75" alt="Interior painting" loading="lazy"/>
-        <div class="svc-overlay">
-          <div class="svc-num">05</div>
-          <div class="svc-title">Interior Painting</div>
-        </div>
-        <div class="svc-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      <!-- Trust strip -->
+      <div class="ru d5" style="display:flex;flex-wrap:wrap;gap:24px;font-size:.65rem;letter-spacing:.13em;color:var(--muted);text-transform:uppercase;font-weight:500">
+        <span>✓ Licensed &amp; Insured</span>
+        <span>✓ Free Estimates</span>
+        <span>★ 5-Star Rated</span>
       </div>
 
     </div>
+  </div>
 
-    <!-- All services list -->
-    <div class="mt-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-px bg-[var(--border)]">
-      <div class="bg-[var(--white)] px-6 py-5 reveal-up" style="font-size:.78rem;font-weight:500;color:var(--ink2);letter-spacing:.04em">Drywall &amp; Patching</div>
-      <div class="bg-[var(--white)] px-6 py-5 reveal-up d2" style="font-size:.78rem;font-weight:500;color:var(--ink2);letter-spacing:.04em">Trim &amp; Doors</div>
-      <div class="bg-[var(--white)] px-6 py-5 reveal-up d3" style="font-size:.78rem;font-weight:500;color:var(--ink2);letter-spacing:.04em">Caulk &amp; Grout</div>
-      <div class="bg-[var(--white)] px-6 py-5 reveal-up d4" style="font-size:.78rem;font-weight:500;color:var(--ink2);letter-spacing:.04em">Fence &amp; Decks</div>
-      <div class="bg-[var(--white)] px-6 py-5 reveal-up d5" style="font-size:.78rem;font-weight:500;color:var(--ink2);letter-spacing:.04em">General Repairs</div>
+  <!-- Floating stat badge -->
+  <div style="position:absolute;left:48px;bottom:48px;background:var(--ink);padding:20px 28px;z-index:20" class="ru d6">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:3.2rem;color:var(--clay);line-height:1">150+</div>
+    <div style="font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.4);font-weight:600;margin-top:2px">Projects Completed</div>
+  </div>
+
+  <!-- Scroll cue -->
+  <div style="position:absolute;bottom:48px;right:60px;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:20" class="ru d6" aria-hidden="true">
+    <span style="font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:600">Scroll</span>
+    <div style="width:1px;height:44px;background:linear-gradient(to bottom,var(--clay),transparent);animation:sp 1.8s ease-in-out infinite"></div>
+  </div>
+  <style>@keyframes sp{0%,100%{opacity:.3;transform:scaleY(.5);transform-origin:top}50%{opacity:1;transform:scaleY(1)}}</style>
+
+</section>
+
+<!-- ══════════════════════
+     STATS — dark, cinematic
+══════════════════════ -->
+<section style="background:var(--ink);padding:80px 0;position:relative;overflow:hidden">
+  <!-- subtle grid -->
+  <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:72px 72px;pointer-events:none"></div>
+
+  <div style="max-width:1280px;margin:0 auto;padding:0 48px;display:grid;grid-template-columns:repeat(4,1fr);gap:0">
+
+    <div class="ru" style="padding:0 40px 0 0;border-right:1px solid rgba(255,255,255,.06)">
+      <div class="snum" data-target="150" data-suffix="+">0</div>
+      <div style="font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.3);font-weight:600;margin-top:8px">Projects Done</div>
+    </div>
+
+    <div class="ru d2" style="padding:0 40px;border-right:1px solid rgba(255,255,255,.06)">
+      <div class="snum" data-target="5" data-suffix="★">0</div>
+      <div style="font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.3);font-weight:600;margin-top:8px">Average Rating</div>
+    </div>
+
+    <div class="ru d3" style="padding:0 40px;border-right:1px solid rgba(255,255,255,.06)">
+      <div class="snum" data-target="7" data-suffix="+">0</div>
+      <div style="font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.3);font-weight:600;margin-top:8px">Years in Business</div>
+    </div>
+
+    <div class="ru d4" style="padding:0 0 0 40px">
+      <div class="snum" data-target="10" data-suffix="">0</div>
+      <div style="font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.3);font-weight:600;margin-top:8px">Services Offered</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════
+     SERVICES — hover reveal
+══════════════════════ -->
+<section id="services" style="padding:120px 0;background:var(--bg)">
+  <div style="max-width:1280px;margin:0 auto;padding:0 48px">
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start">
+
+      <!-- Left: list -->
+      <div>
+        <div class="lbl ru">What We Do</div>
+        <h2 class="ru d1" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,6vw,5.5rem);letter-spacing:.03em;line-height:.9;color:var(--ink);margin-bottom:48px">Our<br/>Services</h2>
+
+        <div style="border-top:1px solid var(--border)">
+          <div class="svc-row" data-idx="0">
+            <span class="sn">01</span>
+            <span class="st">Kitchen Remodeling</span>
+            <span class="sa">View →</span>
+          </div>
+          <div class="svc-row" data-idx="1">
+            <span class="sn">02</span>
+            <span class="st">Bathroom Renovation</span>
+            <span class="sa">View →</span>
+          </div>
+          <div class="svc-row" data-idx="2">
+            <span class="sn">03</span>
+            <span class="st">Hardwood &amp; Tile Flooring</span>
+            <span class="sa">View →</span>
+          </div>
+          <div class="svc-row" data-idx="3">
+            <span class="sn">04</span>
+            <span class="st">Basement Finishing</span>
+            <span class="sa">View →</span>
+          </div>
+          <div class="svc-row" data-idx="4">
+            <span class="sn">05</span>
+            <span class="st">Interior Painting</span>
+            <span class="sa">View →</span>
+          </div>
+          <div class="svc-row" data-idx="5">
+            <span class="sn">06</span>
+            <span class="st">Drywall &amp; Trim</span>
+            <span class="sa">View →</span>
+          </div>
+          <div class="svc-row" data-idx="6">
+            <span class="sn">07</span>
+            <span class="st">General Repairs</span>
+            <span class="sa">View →</span>
+          </div>
+        </div>
+
+        <div style="margin-top:40px" class="ru d3">
+          <a href="#contact" class="bclay"><span>Get a Free Quote</span></a>
+        </div>
+      </div>
+
+      <!-- Right: image reveal pane -->
+      <div style="position:sticky;top:120px;height:540px;background:#1a1a18;overflow:hidden" class="rs d2">
+        <div id="svc-imgs">
+          <div class="svc-img show" data-si="0">
+            <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80" alt="Kitchen remodeling" loading="lazy"/>
+          </div>
+          <div class="svc-img" data-si="1">
+            <img src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=800&q=80" alt="Bathroom renovation" loading="lazy"/>
+          </div>
+          <div class="svc-img" data-si="2">
+            <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80" alt="Flooring" loading="lazy"/>
+          </div>
+          <div class="svc-img" data-si="3">
+            <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80" alt="Basement finishing" loading="lazy"/>
+          </div>
+          <div class="svc-img" data-si="4">
+            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80" alt="Interior painting" loading="lazy"/>
+          </div>
+          <div class="svc-img" data-si="5">
+            <img src="https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?w=800&q=80" alt="Drywall and trim" loading="lazy"/>
+          </div>
+          <div class="svc-img" data-si="6">
+            <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80" alt="General repairs" loading="lazy"/>
+          </div>
+        </div>
+        <!-- Service label overlay -->
+        <div id="svc-label" style="position:absolute;bottom:24px;left:24px;background:rgba(24,24,22,.8);padding:10px 16px;backdrop-filter:blur(8px)">
+          <div style="font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--clay);font-weight:700">01 — Kitchen Remodeling</div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════
+<!-- ══════════════════════
      BEFORE / AFTER
-══════════════════════════════════ -->
-<section id="work" class="py-28 bg-[var(--bg2)]">
-  <div class="max-w-7xl mx-auto px-6 lg:px-16">
-    <div class="mb-16">
-      <div class="label reveal-up">Transformations</div>
-      <h2 class="reveal-up d2" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2.8rem,6vw,5rem);letter-spacing:.03em;line-height:.95;color:var(--ink)">Before &amp; After</h2>
+══════════════════════ -->
+<section id="work" style="padding:120px 0;background:var(--bg2)">
+  <div style="max-width:1280px;margin:0 auto;padding:0 48px">
+    <div style="margin-bottom:64px">
+      <div class="lbl ru">Transformations</div>
+      <h2 class="ru d1" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,6vw,5.5rem);letter-spacing:.03em;line-height:.9;color:var(--ink)">Before &amp; After</h2>
     </div>
 
-    <div class="grid md:grid-cols-2 gap-6">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
 
-      <!-- B/A 1 -->
-      <div class="reveal-scale">
-        <div class="ba-wrap" style="height:380px" data-ba>
-          <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800&q=75" alt="Zeeland Kitchen — Before" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy"/>
+      <div class="rs">
+        <div class="ba" style="height:420px" data-ba>
+          <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=900&q=80" alt="Before — Zeeland Kitchen" style="width:100%;height:100%;object-fit:cover" loading="lazy"/>
           <div class="ba-after">
-            <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=75" alt="Zeeland Kitchen — After" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy"/>
+            <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=900&q=80" alt="After — Zeeland Kitchen" style="width:100%;height:100%;object-fit:cover" loading="lazy"/>
           </div>
           <div class="ba-line"></div>
-          <div class="ba-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1C1C1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-4-4-4 4M3 16l4 4 4-4"/><line x1="17" y1="4" x2="17" y2="20"/><line x1="7" y1="4" x2="7" y2="20"/></svg>
-          </div>
-          <div class="ba-label before">Before</div>
-          <div class="ba-label after">After</div>
+          <div class="ba-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1C1C1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-4-4-4 4M3 16l4 4 4-4"/><line x1="17" y1="4" x2="17" y2="20"/><line x1="7" y1="4" x2="7" y2="20"/></svg></div>
+          <div class="ba-tag b">Before</div>
+          <div class="ba-tag a">After</div>
         </div>
-        <p class="mt-4" style="font-size:.78rem;letter-spacing:.06em;color:var(--muted);font-weight:500">Zeeland, MI — Complete Kitchen Renovation</p>
+        <p style="margin-top:14px;font-size:.72rem;letter-spacing:.08em;color:var(--muted);font-weight:500">Zeeland, MI — Complete Kitchen Renovation</p>
       </div>
 
-      <!-- B/A 2 -->
-      <div class="reveal-scale d2">
-        <div class="ba-wrap" style="height:380px" data-ba>
-          <img src="https://images.unsplash.com/photo-1560448204-603b3fc33ddc?w=800&q=75" alt="Bedroom Flooring — Before" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy"/>
+      <div class="rs d2">
+        <div class="ba" style="height:420px" data-ba>
+          <img src="https://images.unsplash.com/photo-1560448204-603b3fc33ddc?w=900&q=80" alt="Before — Hardwood Flooring" style="width:100%;height:100%;object-fit:cover" loading="lazy"/>
           <div class="ba-after">
-            <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=75" alt="Bedroom Flooring — After" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy"/>
+            <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=900&q=80" alt="After — Hardwood Flooring" style="width:100%;height:100%;object-fit:cover" loading="lazy"/>
           </div>
           <div class="ba-line"></div>
-          <div class="ba-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1C1C1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-4-4-4 4M3 16l4 4 4-4"/><line x1="17" y1="4" x2="17" y2="20"/><line x1="7" y1="4" x2="7" y2="20"/></svg>
-          </div>
-          <div class="ba-label before">Before</div>
-          <div class="ba-label after">After</div>
+          <div class="ba-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1C1C1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-4-4-4 4M3 16l4 4 4-4"/><line x1="17" y1="4" x2="17" y2="20"/><line x1="7" y1="4" x2="7" y2="20"/></svg></div>
+          <div class="ba-tag b">Before</div>
+          <div class="ba-tag a">After</div>
         </div>
-        <p class="mt-4" style="font-size:.78rem;letter-spacing:.06em;color:var(--muted);font-weight:500">Byron Center, MI — Natural Hickory Flooring</p>
+        <p style="margin-top:14px;font-size:.72rem;letter-spacing:.08em;color:var(--muted);font-weight:500">Byron Center, MI — Natural Hickory Flooring</p>
       </div>
 
-      <!-- B/A 3 -->
-      <div class="reveal-scale d3">
-        <div class="ba-wrap" style="height:380px" data-ba>
-          <img src="https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=800&q=75" alt="Rockford Kitchen — Before" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy"/>
+      <div class="rs d3">
+        <div class="ba" style="height:420px" data-ba>
+          <img src="https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=900&q=80" alt="Before — Basement" style="width:100%;height:100%;object-fit:cover" loading="lazy"/>
           <div class="ba-after">
-            <img src="https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=800&q=75" alt="Rockford Kitchen — After" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy"/>
+            <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=900&q=80" alt="After — Basement" style="width:100%;height:100%;object-fit:cover" loading="lazy"/>
           </div>
           <div class="ba-line"></div>
-          <div class="ba-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1C1C1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-4-4-4 4M3 16l4 4 4-4"/><line x1="17" y1="4" x2="17" y2="20"/><line x1="7" y1="4" x2="7" y2="20"/></svg>
-          </div>
-          <div class="ba-label before">Before</div>
-          <div class="ba-label after">After</div>
+          <div class="ba-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1C1C1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-4-4-4 4M3 16l4 4 4-4"/><line x1="17" y1="4" x2="17" y2="20"/><line x1="7" y1="4" x2="7" y2="20"/></svg></div>
+          <div class="ba-tag b">Before</div>
+          <div class="ba-tag a">After</div>
         </div>
-        <p class="mt-4" style="font-size:.78rem;letter-spacing:.06em;color:var(--muted);font-weight:500">Rockford, MI — Kitchen Refresh</p>
+        <p style="margin-top:14px;font-size:.72rem;letter-spacing:.08em;color:var(--muted);font-weight:500">Grandville, MI — Basement Finishing</p>
       </div>
 
-      <!-- B/A 4 -->
-      <div class="reveal-scale d4">
-        <div class="ba-wrap" style="height:380px" data-ba>
-          <img src="https://images.unsplash.com/photo-1615874694520-474822394e73?w=800&q=75" alt="Grandville Basement — Before" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy"/>
+      <div class="rs d4">
+        <div class="ba" style="height:420px" data-ba>
+          <img src="https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=900&q=80" alt="Before — Kitchen Refresh" style="width:100%;height:100%;object-fit:cover" loading="lazy"/>
           <div class="ba-after">
-            <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=75" alt="Grandville Basement — After" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy"/>
+            <img src="https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=900&q=80" alt="After — Kitchen Refresh" style="width:100%;height:100%;object-fit:cover" loading="lazy"/>
           </div>
           <div class="ba-line"></div>
-          <div class="ba-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1C1C1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-4-4-4 4M3 16l4 4 4-4"/><line x1="17" y1="4" x2="17" y2="20"/><line x1="7" y1="4" x2="7" y2="20"/></svg>
-          </div>
-          <div class="ba-label before">Before</div>
-          <div class="ba-label after">After</div>
+          <div class="ba-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1C1C1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-4-4-4 4M3 16l4 4 4-4"/><line x1="17" y1="4" x2="17" y2="20"/><line x1="7" y1="4" x2="7" y2="20"/></svg></div>
+          <div class="ba-tag b">Before</div>
+          <div class="ba-tag a">After</div>
         </div>
-        <p class="mt-4" style="font-size:.78rem;letter-spacing:.06em;color:var(--muted);font-weight:500">Grandville, MI — Basement Finishing</p>
+        <p style="margin-top:14px;font-size:.72rem;letter-spacing:.08em;color:var(--muted);font-weight:500">Rockford, MI — Kitchen Refresh</p>
       </div>
 
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════
-     GALLERY
-══════════════════════════════════ -->
-<section class="py-28 bg-[var(--bg)]">
-  <div class="max-w-7xl mx-auto px-6 lg:px-16">
-    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-16">
-      <div>
-        <div class="label reveal-up">Portfolio</div>
-        <h2 class="reveal-up d2" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2.8rem,6vw,5rem);letter-spacing:.03em;line-height:.95;color:var(--ink)">Selected Work</h2>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-      <div class="gal-item reveal-scale" style="aspect-ratio:1">
-        <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=75" alt="Kitchen remodel Grand Rapids" loading="lazy"/>
-        <div class="gal-cap"><p style="font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:#fff;font-weight:600">Grand Rapids Kitchen</p></div>
-      </div>
-      <div class="gal-item reveal-scale d2" style="aspect-ratio:1">
-        <img src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=600&q=75" alt="Bathroom tile work" loading="lazy"/>
-        <div class="gal-cap"><p style="font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:#fff;font-weight:600">Bathroom Tile</p></div>
-      </div>
-      <div class="gal-item reveal-scale d3" style="aspect-ratio:1;grid-row:span 2">
-        <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=75" alt="Finished basement" loading="lazy" style="height:100%"/>
-        <div class="gal-cap"><p style="font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:#fff;font-weight:600">Grandville Basement</p></div>
-      </div>
-      <div class="gal-item reveal-scale d4" style="aspect-ratio:1">
-        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&q=75" alt="Hardwood flooring" loading="lazy"/>
-        <div class="gal-cap"><p style="font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:#fff;font-weight:600">Hardwood Floors</p></div>
-      </div>
-      <div class="gal-item reveal-scale d2" style="aspect-ratio:1">
-        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=75" alt="Interior painting" loading="lazy"/>
-        <div class="gal-cap"><p style="font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:#fff;font-weight:600">Interior Paint</p></div>
-      </div>
-      <div class="gal-item reveal-scale d3" style="aspect-ratio:1">
-        <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=600&q=75" alt="Zeeland kitchen after" loading="lazy"/>
-        <div class="gal-cap"><p style="font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:#fff;font-weight:600">Zeeland Kitchen</p></div>
-      </div>
-      <div class="gal-item reveal-scale d4" style="aspect-ratio:1">
-        <img src="https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=600&q=75" alt="Modern kitchen detail" loading="lazy"/>
-        <div class="gal-cap"><p style="font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:#fff;font-weight:600">Cabinet Detail</p></div>
-      </div>
-      <div class="gal-item reveal-scale d5" style="aspect-ratio:1">
-        <img src="https://images.unsplash.com/photo-1560448204-603b3fc33ddc?w=600&q=75" alt="Room renovation" loading="lazy"/>
-        <div class="gal-cap"><p style="font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:#fff;font-weight:600">Room Renovation</p></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════
+<!-- ══════════════════════
      ABOUT
-══════════════════════════════════ -->
-<section id="about" class="py-28 bg-[var(--white)] border-y border-[var(--border)]">
-  <div class="max-w-7xl mx-auto px-6 lg:px-16">
-    <div class="grid lg:grid-cols-2 gap-16 items-center">
+══════════════════════ -->
+<section id="about" style="padding:120px 0;background:var(--white);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div style="max-width:1280px;margin:0 auto;padding:0 48px;display:grid;grid-template-columns:1fr 1fr;gap:96px;align-items:center">
 
-      <!-- Left: image -->
-      <div class="relative reveal-left">
-        <div class="img-reveal" style="aspect-ratio:4/5">
-          <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80" alt="Ronne Home Solutions team at work" loading="lazy" style="width:100%;height:100%;object-fit:cover"/>
+    <!-- Left: image -->
+    <div style="position:relative" class="rl">
+      <div class="ir" style="aspect-ratio:3/4">
+        <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=900&q=85" alt="Ronne Home Solutions crew at work" loading="lazy"/>
+      </div>
+      <!-- Corner accent -->
+      <div style="position:absolute;top:-16px;left:-16px;width:64px;height:64px;border:2px solid var(--clay);pointer-events:none"></div>
+      <!-- Floating dark card -->
+      <div style="position:absolute;right:-24px;bottom:40px;background:var(--ink);padding:24px 28px;max-width:220px">
+        <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:.95rem;color:rgba(255,255,255,.75);line-height:1.6;margin-bottom:12px">"Done right the first time, at a price that's fair."</div>
+        <div style="font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.3);font-weight:600">Our Promise</div>
+      </div>
+    </div>
+
+    <!-- Right: content -->
+    <div>
+      <div class="lbl ru">Our Story</div>
+      <h2 class="ru d1" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2.8rem,5vw,4.5rem);letter-spacing:.03em;line-height:.9;color:var(--ink);margin-bottom:24px">Built on Honesty.<br/>Driven by Craft.</h2>
+      <div style="width:48px;height:2px;background:linear-gradient(90deg,var(--clay),var(--gold));margin-bottom:28px" class="ru d2"></div>
+      <p class="ru d2" style="font-size:.95rem;line-height:1.85;color:var(--ink2);font-weight:300;margin-bottom:20px">
+        Ronne Home Solutions was founded on a simple belief: every homeowner deserves quality craftsmanship without the runaround. We're a family-operated team serving West Michigan.
+      </p>
+      <p class="ru d3" style="font-size:.95rem;line-height:1.85;color:var(--ink2);font-weight:300;margin-bottom:40px">
+        We don't cut corners, we don't upsell you on work you don't need, and we always leave your home cleaner than we found it. That's the Ronne difference.
+      </p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:40px" class="ru d4">
+        <div>
+          <div style="font-weight:600;font-size:.85rem;color:var(--ink);margin-bottom:4px">Licensed &amp; Insured</div>
+          <div style="font-size:.78rem;color:var(--muted);line-height:1.5">Fully covered for your peace of mind</div>
         </div>
-        <!-- Quote pullout -->
-        <div class="absolute -right-4 lg:-right-8 bottom-10 bg-[var(--ink)] p-6" style="max-width:240px">
-          <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:1.05rem;color:#fff;line-height:1.5;margin-bottom:12px">"Done right the first time, at a price that's fair."</div>
-          <div style="font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.45);font-weight:600">Our Promise</div>
+        <div>
+          <div style="font-weight:600;font-size:.85rem;color:var(--ink);margin-bottom:4px">Free Estimates</div>
+          <div style="font-size:.78rem;color:var(--muted);line-height:1.5">Transparent quotes, no surprises</div>
         </div>
-        <div style="position:absolute;top:-8px;left:-8px;width:60px;height:60px;border:2px solid var(--clay);pointer-events:none"></div>
+        <div>
+          <div style="font-weight:600;font-size:.85rem;color:var(--ink);margin-bottom:4px">Clean Job Sites</div>
+          <div style="font-size:.78rem;color:var(--muted);line-height:1.5">We clean up every day, every time</div>
+        </div>
+        <div>
+          <div style="font-weight:600;font-size:.85rem;color:var(--ink);margin-bottom:4px">Quality Materials</div>
+          <div style="font-size:.78rem;color:var(--muted);line-height:1.5">We source right for every project</div>
+        </div>
       </div>
 
-      <!-- Right: content -->
+      <div class="ru d5">
+        <a href="#contact" class="bclay"><span>Start Your Project</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════
+     TESTIMONIALS — editorial
+══════════════════════ -->
+<section id="testimonials" style="padding:120px 0;background:var(--bg)">
+  <div style="max-width:1280px;margin:0 auto;padding:0 48px">
+
+    <div class="lbl ru">Reviews</div>
+
+    <!-- Main huge quote -->
+    <div style="max-width:900px;margin-bottom:80px">
+      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(2rem,4.5vw,4rem);line-height:1.2;color:var(--ink);margin-bottom:32px" class="ru d1">
+        "They finished our basement last winter and it turned out amazing. We had a tight budget and they worked with us the whole way."
+      </div>
+      <div style="display:flex;align-items:center;gap:16px" class="ru d2">
+        <div style="width:40px;height:1px;background:var(--clay)"></div>
+        <div>
+          <div style="font-weight:600;font-size:.88rem;color:var(--ink)">Marcus &amp; Julia K.</div>
+          <div style="font-size:.7rem;color:var(--muted);margin-top:2px">Grandville, MI · via Nextdoor</div>
+        </div>
+        <div style="display:flex;gap:3px;margin-left:8px">
+          <svg width="13" height="13" viewBox="0 0 20 20" fill="#C9920A"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg width="13" height="13" viewBox="0 0 20 20" fill="#C9920A"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg width="13" height="13" viewBox="0 0 20 20" fill="#C9920A"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg width="13" height="13" viewBox="0 0 20 20" fill="#C9920A"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg width="13" height="13" viewBox="0 0 20 20" fill="#C9920A"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2 supporting cards -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
+      <div class="tc ru" style="background:var(--white);border:1px solid var(--border);padding:32px">
+        <p style="font-size:.92rem;line-height:1.8;color:var(--ink2);font-weight:300;margin-bottom:24px">"Ronne did my kitchen backsplash and bathroom floor. Came when they said they would, cleaned up every day, and the tile work is perfect. Very happy with the results and the price."</p>
+        <div style="font-weight:600;font-size:.8rem;color:var(--ink)">Dave T.</div>
+        <div style="font-size:.68rem;color:var(--muted);margin-top:2px">Holland, MI · via Google</div>
+      </div>
+      <div class="tc ru d2" style="background:var(--ink);padding:32px">
+        <p style="font-size:.92rem;line-height:1.8;color:rgba(255,255,255,.65);font-weight:300;margin-bottom:24px">"Had them do hardwood floors throughout the main level and floating shelves in the living room. Every detail was spot on. Crew was polite, punctual, and genuinely cared about getting it right."</p>
+        <div style="font-weight:600;font-size:.8rem;color:#fff">Sarah M.</div>
+        <div style="font-size:.68rem;color:rgba(255,255,255,.3);margin-top:2px">Rockford, MI · via Google</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════
+     GALLERY
+══════════════════════ -->
+<section style="padding:120px 0;background:var(--bg2)">
+  <div style="max-width:1280px;margin:0 auto;padding:0 48px">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:48px;flex-wrap:wrap;gap:16px">
       <div>
-        <div class="label reveal-up">Our Story</div>
+        <div class="lbl ru">Portfolio</div>
+        <h2 class="ru d1" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,6vw,5.5rem);letter-spacing:.03em;line-height:.9;color:var(--ink)">Selected Work</h2>
+      </div>
+      <p class="ru d2" style="font-size:.85rem;color:var(--muted);max-width:280px;line-height:1.7">Swipe or hover to explore. Real projects, real results.</p>
+    </div>
 
-        <h2 class="mb-6 reveal-up d2" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,5vw,4.2rem);letter-spacing:.03em;line-height:.95;color:var(--ink)">
-          Built on Honesty.<br/>Driven by Craft.
-        </h2>
+    <!-- Asymmetric gallery grid -->
+    <div style="display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:auto;gap:6px">
 
-        <div style="width:48px;height:2px;background:linear-gradient(90deg,var(--clay),var(--gold));margin-bottom:24px" class="reveal-up d3"></div>
+      <!-- Large left -->
+      <div class="gi rs" style="grid-column:1/6;grid-row:1/3;height:520px">
+        <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80" alt="Grand Rapids kitchen remodel" loading="lazy"/>
+        <div class="gcap"><p style="font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;font-weight:700">Grand Rapids Kitchen</p></div>
+      </div>
 
-        <p class="reveal-up d3 mb-5" style="font-size:.95rem;line-height:1.8;color:var(--ink2);font-weight:300">
-          Ronne Home Solutions was founded on a simple belief: every homeowner deserves quality craftsmanship without the runaround. We're a family-operated team serving West Michigan — from Holland to Grand Rapids and beyond.
-        </p>
-        <p class="reveal-up d4 mb-10" style="font-size:.95rem;line-height:1.8;color:var(--ink2);font-weight:300">
-          We don't cut corners, we don't upsell you on work you don't need, and we always leave your home cleaner than we found it. That's the Ronne difference.
-        </p>
+      <!-- Top right -->
+      <div class="gi rs d1" style="grid-column:6/10;grid-row:1/2;height:254px">
+        <img src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=700&q=80" alt="Bathroom tile" loading="lazy"/>
+        <div class="gcap"><p style="font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;font-weight:700">Bathroom Tile</p></div>
+      </div>
 
-        <!-- Feature list -->
-        <div class="grid grid-cols-2 gap-4 reveal-up d5">
-          <div class="flex items-start gap-3">
-            <div style="width:6px;height:6px;border-radius:50%;background:var(--clay);margin-top:7px;flex-shrink:0"></div>
-            <div>
-              <div style="font-weight:600;font-size:.85rem;color:var(--ink);margin-bottom:2px">Licensed &amp; Insured</div>
-              <div style="font-size:.78rem;color:var(--muted);line-height:1.5">Fully covered for your peace of mind</div>
-            </div>
-          </div>
-          <div class="flex items-start gap-3">
-            <div style="width:6px;height:6px;border-radius:50%;background:var(--clay);margin-top:7px;flex-shrink:0"></div>
-            <div>
-              <div style="font-weight:600;font-size:.85rem;color:var(--ink);margin-bottom:2px">Free Estimates</div>
-              <div style="font-size:.78rem;color:var(--muted);line-height:1.5">Transparent quotes, no hidden fees</div>
-            </div>
-          </div>
-          <div class="flex items-start gap-3">
-            <div style="width:6px;height:6px;border-radius:50%;background:var(--clay);margin-top:7px;flex-shrink:0"></div>
-            <div>
-              <div style="font-weight:600;font-size:.85rem;color:var(--ink);margin-bottom:2px">Quality Materials</div>
-              <div style="font-size:.78rem;color:var(--muted);line-height:1.5">We source right for every job</div>
-            </div>
-          </div>
-          <div class="flex items-start gap-3">
-            <div style="width:6px;height:6px;border-radius:50%;background:var(--clay);margin-top:7px;flex-shrink:0"></div>
-            <div>
-              <div style="font-weight:600;font-size:.85rem;color:var(--ink);margin-bottom:2px">Clean Work Sites</div>
-              <div style="font-size:.78rem;color:var(--muted);line-height:1.5">We clean up every day, every time</div>
-            </div>
-          </div>
-        </div>
+      <!-- Top far right -->
+      <div class="gi rs d2" style="grid-column:10/13;grid-row:1/2;height:254px">
+        <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=700&q=80" alt="Basement finishing" loading="lazy"/>
+        <div class="gcap"><p style="font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;font-weight:700">Grandville Basement</p></div>
+      </div>
 
-        <div class="reveal-up d6 mt-10">
-          <a href="#contact" class="btn-clay"><span>Start Your Project</span></a>
-        </div>
+      <!-- Bottom middle -->
+      <div class="gi rs d3" style="grid-column:6/10;grid-row:2/3;height:260px">
+        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=700&q=80" alt="Hardwood floors" loading="lazy"/>
+        <div class="gcap"><p style="font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;font-weight:700">Hardwood Floors</p></div>
+      </div>
+
+      <!-- Bottom far right -->
+      <div class="gi rs d4" style="grid-column:10/13;grid-row:2/3;height:260px">
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80" alt="Interior painting" loading="lazy"/>
+        <div class="gcap"><p style="font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;font-weight:700">Interior Paint</p></div>
+      </div>
+
+      <!-- Bottom strip -->
+      <div class="gi rs d2" style="grid-column:1/5;height:220px">
+        <img src="https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=700&q=80" alt="Cabinet detail" loading="lazy"/>
+        <div class="gcap"><p style="font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;font-weight:700">Zeeland Kitchen</p></div>
+      </div>
+      <div class="gi rs d3" style="grid-column:5/9;height:220px">
+        <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=700&q=80" alt="Kitchen renovation" loading="lazy"/>
+        <div class="gcap"><p style="font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;font-weight:700">Byron Center</p></div>
+      </div>
+      <div class="gi rs d4" style="grid-column:9/13;height:220px">
+        <img src="https://images.unsplash.com/photo-1560448204-603b3fc33ddc?w=700&q=80" alt="Room renovation" loading="lazy"/>
+        <div class="gcap"><p style="font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;font-weight:700">Rockford Project</p></div>
       </div>
 
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════
-     PROCESS
-══════════════════════════════════ -->
-<section class="py-28 bg-[var(--bg2)]">
-  <div class="max-w-7xl mx-auto px-6 lg:px-16">
-    <div class="mb-16 text-center">
-      <div class="label reveal-up" style="justify-content:center">How It Works</div>
-      <h2 class="reveal-up d2" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2.8rem,6vw,5rem);letter-spacing:.03em;line-height:.95;color:var(--ink)">Simple Process</h2>
-    </div>
+<!-- ══════════════════════
+     CTA — dramatic full screen
+══════════════════════ -->
+<section style="padding:160px 48px;background:var(--ink);position:relative;overflow:hidden;text-align:center">
+  <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:72px 72px;pointer-events:none"></div>
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,rgba(184,105,63,.14) 0%,transparent 65%);pointer-events:none"></div>
 
-    <div class="grid md:grid-cols-4 gap-8">
-      <div class="reveal-up text-center md:text-left">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:4rem;color:rgba(184,105,63,.15);line-height:1;margin-bottom:4px;transition:color .3s" class="proc-n">01</div>
-        <div style="width:32px;height:2px;background:var(--clay);margin-bottom:16px" class="md:mx-0 mx-auto"></div>
-        <div style="font-weight:600;font-size:.95rem;color:var(--ink);margin-bottom:8px">Contact Us</div>
-        <p style="font-size:.82rem;line-height:1.7;color:var(--muted)">Reach out by phone, text, or the form below. We respond fast.</p>
-      </div>
-      <div class="reveal-up d2 text-center md:text-left">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:4rem;color:rgba(184,105,63,.15);line-height:1;margin-bottom:4px" class="proc-n">02</div>
-        <div style="width:32px;height:2px;background:var(--clay);margin-bottom:16px" class="md:mx-0 mx-auto"></div>
-        <div style="font-weight:600;font-size:.95rem;color:var(--ink);margin-bottom:8px">Free Estimate</div>
-        <p style="font-size:.82rem;line-height:1.7;color:var(--muted)">We come to you, assess the project, and give you a clear honest quote.</p>
-      </div>
-      <div class="reveal-up d3 text-center md:text-left">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:4rem;color:rgba(184,105,63,.15);line-height:1;margin-bottom:4px" class="proc-n">03</div>
-        <div style="width:32px;height:2px;background:var(--clay);margin-bottom:16px" class="md:mx-0 mx-auto"></div>
-        <div style="font-weight:600;font-size:.95rem;color:var(--ink);margin-bottom:8px">We Get to Work</div>
-        <p style="font-size:.82rem;line-height:1.7;color:var(--muted)">Skilled crew shows up on time and treats your home with respect.</p>
-      </div>
-      <div class="reveal-up d4 text-center md:text-left">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:4rem;color:rgba(184,105,63,.15);line-height:1;margin-bottom:4px" class="proc-n">04</div>
-        <div style="width:32px;height:2px;background:var(--clay);margin-bottom:16px" class="md:mx-0 mx-auto"></div>
-        <div style="font-weight:600;font-size:.95rem;color:var(--ink);margin-bottom:8px">You Love It</div>
-        <p style="font-size:.82rem;line-height:1.7;color:var(--muted)">We walk through with you, fix anything needed, and you're done.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════
-     TESTIMONIALS
-══════════════════════════════════ -->
-<section id="testimonials" class="py-28 bg-[var(--bg)]">
-  <div class="max-w-7xl mx-auto px-6 lg:px-16">
-    <div class="mb-16">
-      <div class="label reveal-up">Reviews</div>
-      <h2 class="reveal-up d2" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2.8rem,6vw,5rem);letter-spacing:.03em;line-height:.95;color:var(--ink)">What People Say</h2>
-    </div>
-
-    <div class="grid md:grid-cols-3 gap-5">
-
-      <!-- Testi 1 -->
-      <div class="testi-card reveal-up">
-        <div class="flex gap-1 mb-6">
-          <svg width="15" height="15" viewBox="0 0 20 20" fill="var(--gold)" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          <svg width="15" height="15" viewBox="0 0 20 20" fill="var(--gold)" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          <svg width="15" height="15" viewBox="0 0 20 20" fill="var(--gold)" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          <svg width="15" height="15" viewBox="0 0 20 20" fill="var(--gold)" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          <svg width="15" height="15" viewBox="0 0 20 20" fill="var(--gold)" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-        </div>
-        <p style="font-size:.9rem;line-height:1.8;color:var(--ink2);margin-bottom:24px;font-weight:300">
-          "Ronne did my kitchen backsplash and bathroom floor. Came when they said they would, cleaned up every day, and the tile work is perfect. Very happy with the results and the price was more than fair."
-        </p>
-        <div style="font-weight:600;font-size:.82rem;color:var(--ink)">Dave T.</div>
-        <div style="font-size:.7rem;color:var(--muted);margin-top:2px">Holland, MI · via Google</div>
-      </div>
-
-      <!-- Testi 2 — dark center card -->
-      <div class="testi-card dark reveal-up d2">
-        <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:2.2rem;color:var(--clay);line-height:1;margin-bottom:24px">"</div>
-        <div class="flex gap-1 mb-6">
-          <svg width="15" height="15" viewBox="0 0 20 20" fill="var(--gold)"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          <svg width="15" height="15" viewBox="0 0 20 20" fill="var(--gold)"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          <svg width="15" height="15" viewBox="0 0 20 20" fill="var(--gold)"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          <svg width="15" height="15" viewBox="0 0 20 20" fill="var(--gold)"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          <svg width="15" height="15" viewBox="0 0 20 20" fill="var(--gold)"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-        </div>
-        <p style="font-size:.9rem;line-height:1.8;color:rgba(255,255,255,.75);margin-bottom:24px;font-weight:300">
-          "They finished our basement last winter and it turned out amazing. We had a tight budget and they worked with us the whole way. Super honest guys — they actually talked us out of something we didn't need. Would recommend to anyone."
-        </p>
-        <div style="font-weight:600;font-size:.82rem;color:#fff">Marcus &amp; Julia K.</div>
-        <div style="font-size:.7rem;color:rgba(255,255,255,.35);margin-top:2px">Grandville, MI · via Nextdoor</div>
-      </div>
-
-      <!-- Testi 3 -->
-      <div class="testi-card reveal-up d3">
-        <div class="flex gap-1 mb-6">
-          <svg width="15" height="15" viewBox="0 0 20 20" fill="var(--gold)"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          <svg width="15" height="15" viewBox="0 0 20 20" fill="var(--gold)"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          <svg width="15" height="15" viewBox="0 0 20 20" fill="var(--gold)"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          <svg width="15" height="15" viewBox="0 0 20 20" fill="var(--gold)"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          <svg width="15" height="15" viewBox="0 0 20 20" fill="var(--gold)"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-        </div>
-        <p style="font-size:.9rem;line-height:1.8;color:var(--ink2);margin-bottom:24px;font-weight:300">
-          "Had them do hardwood floors throughout the main level and floating shelves in the living room. Every detail was spot on. The crew was polite, punctual, and genuinely cared about getting it right."
-        </p>
-        <div style="font-weight:600;font-size:.82rem;color:var(--ink)">Sarah M.</div>
-        <div style="font-size:.7rem;color:var(--muted);margin-top:2px">Rockford, MI · via Google</div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════
-     CTA BAND
-══════════════════════════════════ -->
-<section class="py-32 bg-[var(--ink)] relative overflow-hidden">
-  <!-- Grid pattern -->
-  <div class="absolute inset-0 pointer-events-none" style="background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:60px 60px" aria-hidden="true"></div>
-  <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse at 60% 50%, rgba(184,105,63,.12) 0%, transparent 65%)" aria-hidden="true"></div>
-
-  <div class="relative z-10 max-w-4xl mx-auto px-6 lg:px-16 text-center">
-    <div class="label reveal-up" style="justify-content:center;color:rgba(255,255,255,.4)">Ready?</div>
-    <h2 class="reveal-up d2 mb-6" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,8vw,7rem);letter-spacing:.03em;line-height:.9;color:#fff">
-      Let's Build<br/><em style="font-family:'Playfair Display',serif;font-style:italic;font-size:.65em;color:var(--clay)">Something Great</em>
+  <div style="position:relative;z-index:10;max-width:900px;margin:0 auto">
+    <div class="lbl ru" style="justify-content:center;color:rgba(255,255,255,.3)">Ready to Start?</div>
+    <h2 class="ru d1" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,10vw,9.5rem);letter-spacing:.03em;line-height:.88;color:#fff;margin-bottom:32px">
+      LET'S BUILD<br/><em style="font-family:'Playfair Display',serif;font-style:italic;font-size:.6em;color:var(--clay)">Something Great</em>
     </h2>
-    <p class="reveal-up d3 mb-12" style="font-size:1rem;color:rgba(255,255,255,.5);line-height:1.7;max-width:440px;margin-left:auto;margin-right:auto;font-weight:300">
-      Free estimates, honest prices, and real craftsmanship — that's the Ronne promise.
-    </p>
-    <div class="reveal-up d4 flex flex-wrap gap-4 justify-center">
-      <a href="#contact" class="btn-clay"><span>Get Your Free Estimate</span></a>
-      <a href="tel:+16168559812" class="btn-ghost" style="border-color:rgba(255,255,255,.2);color:#fff">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.64A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+    <p class="ru d2" style="font-size:1rem;color:rgba(255,255,255,.4);line-height:1.7;max-width:420px;margin:0 auto 48px;font-weight:300">Free estimates, honest pricing, real craftsmanship — that's the Ronne promise.</p>
+    <div class="ru d3" style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center">
+      <a href="#contact" class="bclay"><span>Get Your Free Estimate</span></a>
+      <a href="tel:+16168559812" class="boutline" style="border-color:rgba(255,255,255,.15);color:#fff;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.64A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
         (616) 855-9812
       </a>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════
+<!-- ══════════════════════
      CONTACT
-══════════════════════════════════ -->
-<section id="contact" class="py-28 bg-[var(--bg2)]">
-  <div class="max-w-7xl mx-auto px-6 lg:px-16">
-    <div class="grid lg:grid-cols-2 gap-20">
+══════════════════════ -->
+<section id="contact" style="padding:120px 0;background:var(--bg2)">
+  <div style="max-width:1280px;margin:0 auto;padding:0 48px;display:grid;grid-template-columns:1fr 1fr;gap:96px">
 
-      <!-- Left: info -->
-      <div>
-        <div class="label reveal-up">Get In Touch</div>
-        <h2 class="reveal-up d2 mb-6" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,5vw,4.5rem);letter-spacing:.03em;line-height:.95;color:var(--ink)">Start Your<br/>Project Today</h2>
-        <p class="reveal-up d3 mb-12" style="font-size:.95rem;line-height:1.8;color:var(--ink2);font-weight:300;max-width:400px">
-          Questions? Ready to get started? Fill out the form or reach out directly — we'll get back to you fast.
-        </p>
+    <div>
+      <div class="lbl ru">Get In Touch</div>
+      <h2 class="ru d1" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,5vw,4.5rem);letter-spacing:.03em;line-height:.9;color:var(--ink);margin-bottom:24px">Start Your<br/>Project Today</h2>
+      <p class="ru d2" style="font-size:.92rem;line-height:1.8;color:var(--ink2);font-weight:300;max-width:360px;margin-bottom:48px">Questions? Ready to get started? Reach out — we'll get back to you the same day.</p>
 
-        <div class="flex flex-col gap-6 reveal-up d4">
-          <a href="tel:+16168559812" class="flex items-center gap-5 group cursor-pointer" style="text-decoration:none">
-            <div style="width:48px;height:48px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;transition:background .25s,border-color .25s;flex-shrink:0" class="group-hover:bg-[var(--clay)] group-hover:border-[var(--clay)]">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--clay)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="group-hover:[stroke:white]" style="transition:stroke .25s"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.64A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-            </div>
-            <div>
-              <div style="font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:3px">Phone</div>
-              <div style="font-weight:600;color:var(--ink);font-size:.95rem">(616) 855-9812</div>
-            </div>
-          </a>
+      <div style="display:flex;flex-direction:column;gap:24px" class="ru d3">
+        <a href="tel:+16168559812" style="display:flex;align-items:center;gap:18px;text-decoration:none;cursor:pointer" class="group">
+          <div style="width:46px;height:46px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .25s,border-color .25s;cursor:pointer" onmouseenter="this.style.background='var(--clay)';this.style.borderColor='var(--clay)';this.querySelector('svg').setAttribute('stroke','white')" onmouseleave="this.style.background='';this.style.borderColor='var(--border)';this.querySelector('svg').setAttribute('stroke','var(--clay)')">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--clay)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="transition:stroke .25s"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.64A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          </div>
+          <div>
+            <div style="font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:3px">Phone</div>
+            <div style="font-weight:600;color:var(--ink);font-size:.92rem">(616) 855-9812</div>
+          </div>
+        </a>
 
-          <a href="mailto:ronnehomesolutions@gmail.com" class="flex items-center gap-5 group cursor-pointer" style="text-decoration:none">
-            <div style="width:48px;height:48px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;transition:background .25s,border-color .25s;flex-shrink:0" class="group-hover:bg-[var(--clay)] group-hover:border-[var(--clay)]">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--clay)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="transition:stroke .25s"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            </div>
-            <div>
-              <div style="font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:3px">Email</div>
-              <div style="font-weight:600;color:var(--ink);font-size:.95rem">ronnehomesolutions@gmail.com</div>
-            </div>
-          </a>
+        <a href="mailto:ronnehomesolutions@gmail.com" style="display:flex;align-items:center;gap:18px;text-decoration:none;cursor:pointer">
+          <div style="width:46px;height:46px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .25s,border-color .25s" onmouseenter="this.style.background='var(--clay)';this.style.borderColor='var(--clay)';this.querySelector('svg').setAttribute('stroke','white')" onmouseleave="this.style.background='';this.style.borderColor='var(--border)';this.querySelector('svg').setAttribute('stroke','var(--clay)')">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--clay)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="transition:stroke .25s"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div>
+            <div style="font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:3px">Email</div>
+            <div style="font-weight:600;color:var(--ink);font-size:.88rem;word-break:break-all">ronnehomesolutions@gmail.com</div>
+          </div>
+        </a>
 
-          <div class="flex items-center gap-5 group">
-            <div style="width:48px;height:48px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--clay)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            </div>
-            <div>
-              <div style="font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:3px">Service Area</div>
-              <div style="font-weight:600;color:var(--ink);font-size:.95rem">Holland · Grand Rapids · Zeeland · Hudsonville · Grandville · Rockford · Byron Center</div>
-            </div>
+        <div style="display:flex;align-items:flex-start;gap:18px">
+          <div style="width:46px;height:46px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--clay)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <div style="font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:3px">Service Area</div>
+            <div style="font-size:.85rem;color:var(--ink2);line-height:1.7">Holland · Grand Rapids · Zeeland<br/>Hudsonville · Grandville · Rockford<br/>Byron Center</div>
           </div>
         </div>
       </div>
-
-      <!-- Right: form -->
-      <div class="reveal-right">
-        <form id="contact-form" class="flex flex-col gap-5" onsubmit="handleSubmit(event)" novalidate>
-
-          <div class="grid grid-cols-2 gap-4">
-            <div class="field-wrap">
-              <input type="text" id="fname" name="fname" class="field-input" placeholder="First Name" required autocomplete="given-name"/>
-              <label for="fname" class="field-label">First Name</label>
-            </div>
-            <div class="field-wrap">
-              <input type="text" id="lname" name="lname" class="field-input" placeholder="Last Name" required autocomplete="family-name"/>
-              <label for="lname" class="field-label">Last Name</label>
-            </div>
-          </div>
-
-          <div class="field-wrap">
-            <input type="email" id="email" name="email" class="field-input" placeholder="Email" required autocomplete="email"/>
-            <label for="email" class="field-label">Email Address</label>
-          </div>
-
-          <div class="field-wrap">
-            <input type="tel" id="phone" name="phone" class="field-input" placeholder="Phone" autocomplete="tel"/>
-            <label for="phone" class="field-label">Phone Number</label>
-          </div>
-
-          <div class="field-wrap">
-            <select id="service" name="service" class="field-input" style="appearance:none;padding-top:16px;padding-bottom:8px;color:var(--ink)">
-              <option value="" disabled selected>Select a service</option>
-              <option>Kitchen Remodeling</option>
-              <option>Bathroom Renovation</option>
-              <option>Flooring Installation</option>
-              <option>Basement Finishing</option>
-              <option>Interior Painting</option>
-              <option>Drywall &amp; Patching</option>
-              <option>Trim &amp; Doors</option>
-              <option>General Repairs</option>
-              <option>Other</option>
-            </select>
-            <label for="service" class="field-label" style="transform:translateY(-10px) scale(.8);color:var(--clay)">Service Needed</label>
-          </div>
-
-          <div class="field-wrap">
-            <textarea id="message" name="message" class="field-input" placeholder="Tell us about your project..." rows="4"></textarea>
-            <label for="message" class="field-label">Project Details</label>
-          </div>
-
-          <button type="submit" class="btn-clay w-full justify-center py-4">
-            <span>Send Message</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="position:relative;z-index:1"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </button>
-
-          <p style="font-size:.7rem;color:var(--muted);text-align:center">We typically respond within a few hours during business days.</p>
-
-          <div id="form-success" style="display:none;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.3);padding:16px;text-align:center;font-size:.85rem;color:#16a34a;font-weight:500">
-            Message sent! We'll be in touch shortly.
-          </div>
-        </form>
-      </div>
-
     </div>
+
+    <!-- Form -->
+    <div class="rr">
+      <form id="cform" onsubmit="handleSubmit(event)" novalidate style="display:flex;flex-direction:column;gap:16px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="fw">
+            <input type="text" id="fn" name="fn" class="fi" placeholder="First Name" required autocomplete="given-name"/>
+            <label for="fn" class="fl">First Name</label>
+          </div>
+          <div class="fw">
+            <input type="text" id="ln" name="ln" class="fi" placeholder="Last Name" required autocomplete="family-name"/>
+            <label for="ln" class="fl">Last Name</label>
+          </div>
+        </div>
+        <div class="fw">
+          <input type="email" id="em" name="em" class="fi" placeholder="Email" required autocomplete="email"/>
+          <label for="em" class="fl">Email Address</label>
+        </div>
+        <div class="fw">
+          <input type="tel" id="ph" name="ph" class="fi" placeholder="Phone" autocomplete="tel"/>
+          <label for="ph" class="fl">Phone Number</label>
+        </div>
+        <div class="fw">
+          <select id="sv" name="sv" class="fi">
+            <option value="" disabled selected></option>
+            <option>Kitchen Remodeling</option>
+            <option>Bathroom Renovation</option>
+            <option>Flooring Installation</option>
+            <option>Basement Finishing</option>
+            <option>Interior Painting</option>
+            <option>Drywall &amp; Patching</option>
+            <option>Trim &amp; Doors</option>
+            <option>General Repairs</option>
+            <option>Other</option>
+          </select>
+          <label for="sv" class="fl" style="transform:translateY(-9px) scale(.78);color:var(--clay)">Service Needed</label>
+        </div>
+        <div class="fw">
+          <textarea id="msg" name="msg" class="fi" placeholder="Tell us about your project..." rows="4"></textarea>
+          <label for="msg" class="fl">Project Details</label>
+        </div>
+        <button type="submit" class="bclay" style="justify-content:center;padding:15px">
+          <span>Send Message</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="position:relative;z-index:1"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <p style="font-size:.68rem;color:var(--muted);text-align:center">We typically respond within a few hours during business days.</p>
+        <div id="fsuccess" style="display:none;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.3);padding:14px;text-align:center;font-size:.82rem;color:#16a34a;font-weight:500">Message sent! We'll be in touch shortly.</div>
+      </form>
+    </div>
+
   </div>
 </section>
 
-<!-- ══════════════════════════════════
+<!-- ══════════════════════
      FOOTER
-══════════════════════════════════ -->
-<footer class="bg-[var(--ink)] py-16 border-t border-white/5">
-  <div class="max-w-7xl mx-auto px-6 lg:px-16">
-    <div class="grid md:grid-cols-4 gap-10 mb-12">
-      <!-- Brand -->
-      <div class="md:col-span-2">
-        <div class="flex items-center gap-3 mb-5">
-          <svg width="38" height="34" viewBox="0 0 104 92" fill="none">
-            <polyline points="6,82 38,8 70,82" stroke="#B8693F" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-            <polyline points="28,82 60,14 98,82" stroke="#C9920A" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+══════════════════════ -->
+<footer style="background:var(--ink);padding:72px 48px 32px;border-top:1px solid rgba(255,255,255,.04)">
+  <div style="max-width:1280px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;margin-bottom:64px">
+      <div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+          <svg width="34" height="30" viewBox="0 0 104 92" fill="none">
+            <polyline points="6,82 38,8 70,82" stroke="#B8693F" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <polyline points="28,82 60,14 98,82" stroke="#C9920A" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
           <div>
-            <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:.14em;font-size:1rem;color:#fff;line-height:1">RONNE</div>
-            <div style="font-size:.48rem;letter-spacing:.22em;color:rgba(255,255,255,.3);font-weight:600" class="uppercase">HOME SOLUTIONS, LLC</div>
+            <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:.15em;font-size:.95rem;color:#fff;line-height:1">RONNE HOME SOLUTIONS</div>
+            <div style="font-size:.46rem;letter-spacing:.22em;color:rgba(255,255,255,.25);font-weight:600;text-transform:uppercase">Licensed &amp; Insured · West Michigan</div>
           </div>
         </div>
-        <p style="font-size:.84rem;line-height:1.8;color:rgba(255,255,255,.4);max-width:280px;font-weight:300">Honest, affordable home improvement across West Michigan. Licensed &amp; insured.</p>
+        <p style="font-size:.82rem;line-height:1.8;color:rgba(255,255,255,.35);max-width:280px;font-weight:300">Honest, affordable home improvement across West Michigan. Family-operated since 2018.</p>
       </div>
-
-      <!-- Links -->
       <div>
-        <div style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.25);font-weight:600;margin-bottom:16px">Navigate</div>
-        <div class="flex flex-col gap-3">
-          <a href="#services" class="nav-link" style="color:rgba(255,255,255,.5);font-size:.82rem">Services</a>
-          <a href="#work" class="nav-link" style="color:rgba(255,255,255,.5);font-size:.82rem">Our Work</a>
-          <a href="#about" class="nav-link" style="color:rgba(255,255,255,.5);font-size:.82rem">About</a>
-          <a href="#testimonials" class="nav-link" style="color:rgba(255,255,255,.5);font-size:.82rem">Reviews</a>
-          <a href="#contact" class="nav-link" style="color:rgba(255,255,255,.5);font-size:.82rem">Contact</a>
+        <div style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.2);font-weight:600;margin-bottom:16px">Navigate</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <a href="#services" class="nl" style="color:rgba(255,255,255,.45);font-size:.8rem">Services</a>
+          <a href="#work" class="nl" style="color:rgba(255,255,255,.45);font-size:.8rem">Our Work</a>
+          <a href="#about" class="nl" style="color:rgba(255,255,255,.45);font-size:.8rem">About</a>
+          <a href="#testimonials" class="nl" style="color:rgba(255,255,255,.45);font-size:.8rem">Reviews</a>
+          <a href="#contact" class="nl" style="color:rgba(255,255,255,.45);font-size:.8rem">Contact</a>
         </div>
       </div>
-
-      <!-- Contact -->
       <div>
-        <div style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.25);font-weight:600;margin-bottom:16px">Contact</div>
-        <div class="flex flex-col gap-3">
-          <a href="tel:+16168559812" style="color:rgba(255,255,255,.5);font-size:.82rem;text-decoration:none;transition:color .2s" class="hover:text-white">(616) 855-9812</a>
-          <a href="mailto:ronnehomesolutions@gmail.com" style="color:rgba(255,255,255,.5);font-size:.82rem;text-decoration:none;transition:color .2s;word-break:break-all" class="hover:text-white">ronnehomesolutions@gmail.com</a>
-          <div style="color:rgba(255,255,255,.35);font-size:.8rem;line-height:1.6">Holland · Grand Rapids<br/>Zeeland · Grandville<br/>Rockford · Byron Center</div>
+        <div style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.2);font-weight:600;margin-bottom:16px">Contact</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <a href="tel:+16168559812" style="color:rgba(255,255,255,.45);font-size:.8rem;text-decoration:none;transition:color .2s" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='rgba(255,255,255,.45)'">(616) 855-9812</a>
+          <a href="mailto:ronnehomesolutions@gmail.com" style="color:rgba(255,255,255,.45);font-size:.8rem;text-decoration:none;transition:color .2s;word-break:break-all" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='rgba(255,255,255,.45)'">ronnehomesolutions@gmail.com</a>
+          <div style="color:rgba(255,255,255,.3);font-size:.78rem;line-height:1.7;margin-top:4px">Holland · Grand Rapids<br/>Zeeland · Grandville<br/>Rockford · Byron Center</div>
         </div>
       </div>
     </div>
-
-    <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-      <p style="font-size:.7rem;color:rgba(255,255,255,.2)">&copy; 2025 Ronne Home Solutions, LLC. All rights reserved.</p>
-      <p style="font-size:.7rem;color:rgba(255,255,255,.2)">Licensed &amp; Insured · West Michigan</p>
+    <div style="border-top:1px solid rgba(255,255,255,.05);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+      <p style="font-size:.65rem;color:rgba(255,255,255,.18)">&copy; 2025 Ronne Home Solutions, LLC. All rights reserved.</p>
+      <p style="font-size:.65rem;color:rgba(255,255,255,.18)">West Michigan · Licensed &amp; Insured</p>
     </div>
   </div>
 </footer>
 
 <script>
-/* ─────────────────────────────────────────
-   CURSOR
-───────────────────────────────────────── */
-const dot = document.getElementById('cur-dot');
-const ring = document.getElementById('cur-ring');
-let rx = 0, ry = 0, mx = 0, my = 0;
-
+/* ── MIX-BLEND CURSOR ── */
+const cur = document.getElementById('cur');
+let cx = 0, cy = 0;
 document.addEventListener('mousemove', e => {
-  mx = e.clientX; my = e.clientY;
-  dot.style.transform = `translate(${mx}px,${my}px) translate(-50%,-50%)`;
+  cx = e.clientX; cy = e.clientY;
+  cur.style.transform = `translate(${cx}px,${cy}px) translate(-50%,-50%)`;
+});
+document.querySelectorAll('a,button,.svc-row,.gi,.tc,.ba').forEach(el => {
+  el.addEventListener('mouseenter', () => cur.classList.add('big'));
+  el.addEventListener('mouseleave', () => cur.classList.remove('big'));
 });
 
-(function lerpRing() {
-  rx += (mx - rx) * 0.1;
-  ry += (my - ry) * 0.1;
-  ring.style.transform = `translate(${rx}px,${ry}px) translate(-50%,-50%)`;
-  requestAnimationFrame(lerpRing);
-})();
-
-document.querySelectorAll('a,button,.svc-card,.gal-item,.testi-card,.ba-wrap').forEach(el => {
-  el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-  el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
-});
-
-/* ─────────────────────────────────────────
-   HERO SPOTLIGHT
-───────────────────────────────────────── */
-const heroSection = document.getElementById('home');
-const spotlight = document.getElementById('hero-spotlight');
-heroSection && heroSection.addEventListener('mousemove', e => {
-  const r = heroSection.getBoundingClientRect();
-  const x = ((e.clientX - r.left) / r.width * 100).toFixed(1);
-  const y = ((e.clientY - r.top) / r.height * 100).toFixed(1);
-  spotlight.style.setProperty('--mx', x + '%');
-  spotlight.style.setProperty('--my', y + '%');
-});
-
-/* ─────────────────────────────────────────
-   SCROLL PROGRESS
-───────────────────────────────────────── */
-const bar = document.getElementById('progress');
+/* ── PROGRESS ── */
 window.addEventListener('scroll', () => {
-  const pct = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100).toFixed(1);
-  bar.style.width = pct + '%';
-}, { passive: true });
+  const pct = window.scrollY / (document.documentElement.scrollHeight - innerHeight) * 100;
+  document.getElementById('bar').style.width = pct.toFixed(1) + '%';
+}, {passive:true});
 
-/* ─────────────────────────────────────────
-   NAVBAR
-───────────────────────────────────────── */
-const nav = document.getElementById('navbar');
-window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 80);
-}, { passive: true });
+/* ── NAVBAR ── */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => nav.classList.toggle('solid', scrollY > 90), {passive:true});
 
-/* ─────────────────────────────────────────
-   MOBILE MENU
-───────────────────────────────────────── */
-const mobBtn = document.getElementById('mob-btn');
-const mobMenu = document.getElementById('mob-menu');
-let mobOpen = false;
-mobBtn.addEventListener('click', () => {
-  mobOpen = !mobOpen;
-  mobMenu.classList.toggle('open', mobOpen);
-  mobBtn.setAttribute('aria-expanded', mobOpen);
+/* ── MOBILE MENU ── */
+const mob = document.getElementById('mob');
+let mo = false;
+document.getElementById('mbt').addEventListener('click', () => {
+  mo = !mo; mob.classList.toggle('open', mo);
+  document.getElementById('mbt').setAttribute('aria-expanded', mo);
 });
-function closeMob() { mobOpen = false; mobMenu.classList.remove('open'); mobBtn.setAttribute('aria-expanded','false'); }
+function cm(){mo=false;mob.classList.remove('open');document.getElementById('mbt').setAttribute('aria-expanded','false');}
 
-/* ─────────────────────────────────────────
-   SCROLL REVEAL
-───────────────────────────────────────── */
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('in');
-      revealObserver.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+/* ── HERO IMAGE PARALLAX ── */
+const heroPhoto = document.getElementById('hero-photo');
+window.addEventListener('scroll', () => {
+  const y = scrollY;
+  if(y < innerHeight * 1.5) heroPhoto.style.transform = `scale(1.06) translateY(${y * 0.12}px)`;
+}, {passive:true});
 
-document.querySelectorAll('.reveal-up,.reveal-left,.reveal-right,.reveal-scale,.clip-line').forEach(el => revealObserver.observe(el));
+/* ── HERO IMG ENTER ── */
+setTimeout(() => { if(heroPhoto) heroPhoto.style.transform = 'scale(1) translateY(0)'; }, 300);
 
-/* image reveal */
-const imgObserver = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); imgObserver.unobserve(e.target); } });
-}, { threshold: 0.05 });
-document.querySelectorAll('.img-reveal').forEach(el => imgObserver.observe(el));
+/* ── REVEAL ── */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); obs.unobserve(e.target); } });
+}, {threshold:0.08, rootMargin:'0px 0px -50px 0px'});
+document.querySelectorAll('.ru,.rl,.rr,.rs,.cl').forEach(el => obs.observe(el));
 
-/* ─────────────────────────────────────────
-   COUNTER ANIMATION
-───────────────────────────────────────── */
-function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+const imgObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); imgObs.unobserve(e.target); } });
+}, {threshold:0.05});
+document.querySelectorAll('.ir').forEach(el => imgObs.observe(el));
 
-function animateCounter(el) {
+/* ── COUNTERS ── */
+function easeOut(t){ return 1 - Math.pow(2, -10 * t); }
+function animCount(el){
   const target = +el.dataset.target;
   const suffix = el.dataset.suffix || '';
-  const dur = 1600;
-  const start = performance.now();
-  const step = (now) => {
+  const dur = 1800, start = performance.now();
+  const step = now => {
     const t = Math.min((now - start) / dur, 1);
-    const val = Math.round(easeOutExpo(t) * target);
-    el.textContent = val + suffix;
-    if (t < 1) requestAnimationFrame(step);
+    el.textContent = Math.round(easeOut(t) * target) + suffix;
+    if(t < 1) requestAnimationFrame(step);
   };
   requestAnimationFrame(step);
 }
+const cobs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ animCount(e.target); cobs.unobserve(e.target); } });
+}, {threshold:0.5});
+document.querySelectorAll('.snum[data-target]').forEach(el => cobs.observe(el));
 
-const counterObserver = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      animateCounter(e.target);
-      counterObserver.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.5 });
-document.querySelectorAll('.stat-num[data-target]').forEach(el => counterObserver.observe(el));
+/* ── SERVICES HOVER REVEAL ── */
+const rows = document.querySelectorAll('.svc-row');
+const imgs = document.querySelectorAll('.svc-img');
+const lbl = document.getElementById('svc-label');
+const svcNames = ['01 — Kitchen Remodeling','02 — Bathroom Renovation','03 — Hardwood & Tile Flooring','04 — Basement Finishing','05 — Interior Painting','06 — Drywall & Trim','07 — General Repairs'];
+let cur_svc = 0;
 
-/* ─────────────────────────────────────────
-   BEFORE / AFTER SLIDERS
-───────────────────────────────────────── */
+function showSvc(idx) {
+  imgs.forEach(img => img.classList.remove('show'));
+  const target = document.querySelector(`.svc-img[data-si="${idx}"]`);
+  if(target) target.classList.add('show');
+  if(lbl) lbl.querySelector('div').textContent = svcNames[idx] || '';
+  cur_svc = idx;
+}
+
+rows.forEach(row => {
+  row.addEventListener('mouseenter', () => showSvc(+row.dataset.idx));
+});
+
+/* ── BEFORE/AFTER ── */
 document.querySelectorAll('[data-ba]').forEach(wrap => {
   const after = wrap.querySelector('.ba-after');
   const line = wrap.querySelector('.ba-line');
   const btn = wrap.querySelector('.ba-btn');
-  let dragging = false;
+  let drag = false;
 
-  function setPos(pct) {
+  function setP(pct) {
     pct = Math.max(2, Math.min(98, pct));
-    const right = (100 - pct).toFixed(1);
-    after.style.clipPath = `inset(0 ${right}% 0 0)`;
+    after.style.clipPath = `inset(0 ${(100-pct).toFixed(1)}% 0 0)`;
     line.style.left = pct + '%';
     btn.style.left = pct + '%';
   }
-
-  function getPos(e) {
+  function getP(e) {
     const r = wrap.getBoundingClientRect();
-    const cx = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
-    return (cx / r.width * 100);
+    return ((e.touches ? e.touches[0].clientX : e.clientX) - r.left) / r.width * 100;
   }
-
-  wrap.addEventListener('mousedown', e => { dragging = true; setPos(getPos(e)); });
-  window.addEventListener('mouseup', () => dragging = false);
-  window.addEventListener('mousemove', e => { if (dragging) setPos(getPos(e)); });
-  wrap.addEventListener('touchstart', e => { dragging = true; setPos(getPos(e)); }, { passive: true });
-  window.addEventListener('touchend', () => dragging = false);
-  window.addEventListener('touchmove', e => { if (dragging) setPos(getPos(e)); }, { passive: true });
+  wrap.addEventListener('mousedown', e => { drag=true; setP(getP(e)); });
+  window.addEventListener('mouseup', () => drag=false);
+  window.addEventListener('mousemove', e => { if(drag) setP(getP(e)); });
+  wrap.addEventListener('touchstart', e => { drag=true; setP(getP(e)); }, {passive:true});
+  window.addEventListener('touchend', () => drag=false);
+  window.addEventListener('touchmove', e => { if(drag) setP(getP(e)); }, {passive:true});
 });
 
-/* ─────────────────────────────────────────
-   CONTACT FORM
-───────────────────────────────────────── */
-function handleSubmit(e) {
+/* ── FORM ── */
+function handleSubmit(e){
   e.preventDefault();
   const btn = e.target.querySelector('button[type="submit"]');
-  const success = document.getElementById('form-success');
   btn.disabled = true;
-  btn.querySelector('span').textContent = 'Sending...';
+  btn.querySelector('span').textContent = 'Sending…';
   setTimeout(() => {
     btn.style.display = 'none';
-    success.style.display = 'block';
+    document.getElementById('fsuccess').style.display = 'block';
     e.target.reset();
-    document.querySelectorAll('.field-label').forEach(l => l.style.transform = '');
   }, 1000);
 }
-
-/* ─────────────────────────────────────────
-   PROCESS NUMBER HOVER
-───────────────────────────────────────── */
-document.querySelectorAll('.proc-n').forEach(el => {
-  const parent = el.closest('[class*="reveal"]') || el.parentElement;
-  parent.addEventListener('mouseenter', () => el.style.color = 'rgba(184,105,63,.6)');
-  parent.addEventListener('mouseleave', () => el.style.color = 'rgba(184,105,63,.15)');
-});
 </script>
 
 </body>
