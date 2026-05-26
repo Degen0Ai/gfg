@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NOVA — Particle Cosmos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;background:#000;overflow:hidden;cursor:none}
+
+#nebula{
+  position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 50% at 20% 30%, rgba(60,0,120,.35) 0%,transparent 65%),
+    radial-gradient(ellipse 50% 70% at 80% 70%, rgba(0,60,140,.25) 0%,transparent 65%),
+    radial-gradient(ellipse 60% 40% at 50% 10%, rgba(100,20,0,.18) 0%,transparent 70%),
+    radial-gradient(ellipse 40% 50% at 10% 80%, rgba(0,80,80,.15) 0%,transparent 60%);
+  animation:nebulaShift 25s ease-in-out infinite alternate;
+}
+@keyframes nebulaShift{
+  0%  {opacity:.6;filter:hue-rotate(0deg) saturate(1)}
+  100%{opacity:.9;filter:hue-rotate(40deg) saturate(1.3)}
+}
+
+canvas{position:fixed;inset:0;z-index:1}
+#bloom{
+  position:fixed;inset:0;z-index:2;
+  filter:blur(14px);
+  opacity:.45;
+  mix-blend-mode:screen;
+  pointer-events:none;
+}
+#main{z-index:3}
+
+#dot{
+  position:fixed;width:6px;height:6px;
+  background:#fff;border-radius:50%;
+  pointer-events:none;z-index:100;
+  transform:translate(-50%,-50%);
+  transition:transform .08s,opacity .2s;
+}
+#ring{
+  position:fixed;
+  width:36px;height:36px;
+  border:1.5px solid rgba(255,255,255,.25);
+  border-radius:50%;
+  pointer-events:none;z-index:99;
+  transform:translate(-50%,-50%);
+  transition:width .2s ease,height .2s ease,transform .18s ease-out,opacity .3s;
+}
+
+#ui{position:fixed;inset:0;z-index:50;pointer-events:none}
+
+#mode{
+  position:absolute;top:36px;left:50%;transform:translateX(-50%);
+  font-family:'Bebas Neue',sans-serif;
+  font-size:13px;letter-spacing:.55em;
+  color:rgba(255,255,255,.25);
+  text-transform:uppercase;
+  transition:opacity .6s,color .6s;
+}
+
+#info{
+  position:absolute;bottom:36px;left:40px;
+  font-family:'Courier New',monospace;
+  font-size:10px;color:rgba(255,255,255,.15);
+  letter-spacing:.18em;line-height:1.8;
+}
+
+#keys{
+  position:absolute;bottom:36px;right:40px;
+  font-family:'Courier New',monospace;
+  font-size:10px;color:rgba(255,255,255,.12);
+  letter-spacing:.12em;line-height:2;
+  text-align:right;
+}
+#keys span{color:rgba(255,255,255,.28)}
+
+#palette-dot{
+  position:absolute;top:36px;right:40px;
+  width:8px;height:8px;border-radius:50%;
+  background:hsl(240,80%,70%);
+  transition:background .6s;
+}
+
+.flash{
+  position:fixed;inset:0;
+  background:radial-gradient(circle at var(--fx) var(--fy), rgba(255,255,255,.18) 0%, transparent 60%);
+  pointer-events:none;z-index:200;
+  animation:flashOut .5s ease-out forwards;
+}
+@keyframes flashOut{to{opacity:0}}
+</style>
+</head>
+<body>
+
+<div id="nebula"></div>
+<canvas id="bloom"></canvas>
+<canvas id="main"></canvas>
+<div id="dot"></div>
+<div id="ring"></div>
+
+<div id="ui">
+  <div id="mode">DRIFT</div>
+  <div id="palette-dot"></div>
+  <div id="info">60 FPS · 8000 PARTICLES</div>
+  <div id="keys">
+    <span>HOVER</span> GRAVITY WELL<br>
+    <span>CLICK</span> SUPERNOVA<br>
+    <span>RIGHT CLICK</span> BLACK HOLE<br>
+    <span>T</span> TEXT FORM<br>
+    <span>G</span> GALAXY SPIRAL<br>
+    <span>C</span> CHAOS FIELD<br>
+    <span>SPACE</span> FREEZE<br>
+    <span>1 / 2 / 3</span> COLOR PALETTE<br>
+    <span>R</span> RESET &nbsp; <span>S</span> SOUND
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// NOVA — Interactive Particle Cosmos
+// ═══════════════════════════════════════════════════════════
+
+const mainC  = document.getElementById('main');
+const bloomC = document.getElementById('bloom');
+const mc     = mainC.getContext('2d');
+const bc     = bloomC.getContext('2d');
+const dot    = document.getElementById('dot');
+const ring   = document.getElementById('ring');
+const modeEl = document.getElementById('mode');
+const infoEl = document.getElementById('info');
+const pdot   = document.getElementById('palette-dot');
+
+let W, H;
+function resize(){
+  W = mainC.width = bloomC.width  = window.innerWidth;
+  H = mainC.height= bloomC.height = window.innerHeight;
+  buildTextPixels();
+}
+window.addEventListener('resize', resize);
+
+// ── Palettes ──────────────────────────────────────────────
+const PALETTES = [
+  { name:'NEBULA',  hMin:200, hMax:300, base:'hsl(240,80%,70%)' },
+  { name:'INFERNO', hMin:0,   hMax:60,  base:'hsl(20,90%,60%)'  },
+  { name:'VENOM',   hMin:80,  hMax:160, base:'hsl(120,80%,55%)' },
+];
+let palIdx = 0;
+let PAL = PALETTES[0];
+
+function setPalette(i){
+  palIdx = i;
+  PAL = PALETTES[i];
+  pdot.style.background = PAL.base;
+  // Re-randomize hues
+  for(let i=0;i<N;i++){
+    hue[i] = PAL.hMin + Math.random()*(PAL.hMax-PAL.hMin);
+  }
+  modeEl.textContent = 'PALETTE: ' + PAL.name;
+  setTimeout(()=>{ modeEl.textContent = currentMode.toUpperCase(); }, 1500);
+}
+
+// ── Particle data (typed arrays) ──────────────────────────
+const N   = 8000;
+const px  = new Float32Array(N);
+const py  = new Float32Array(N);
+const vx  = new Float32Array(N);
+const vy  = new Float32Array(N);
+const hue = new Float32Array(N);
+const spd = new Float32Array(N);
+const sz  = new Float32Array(N);
+
+// Text mode targets
+const tx_ = new Float32Array(N);
+const ty_ = new Float32Array(N);
+let textPixels = [];
+
+// ── Init ──────────────────────────────────────────────────
+function init(scatter){
+  for(let i=0;i<N;i++) resetP(i, scatter);
+}
+
+function resetP(i, scatter){
+  if(scatter){
+    px[i] = Math.random()*W;
+    py[i] = Math.random()*H;
+  } else {
+    const a = Math.random()*Math.PI*2;
+    const r = Math.random()*80;
+    px[i] = W/2 + Math.cos(a)*r;
+    py[i] = H/2 + Math.sin(a)*r;
+  }
+  const a = Math.random()*Math.PI*2;
+  const s = .05 + Math.random()*.4;
+  vx[i] = Math.cos(a)*s;
+  vy[i] = Math.sin(a)*s;
+  hue[i] = PAL.hMin + Math.random()*(PAL.hMax-PAL.hMin);
+  sz[i]  = .4 + Math.random()*1.6;
+}
+
+// ── Text pixel sampling ───────────────────────────────────
+function buildTextPixels(){
+  if(!W||!H) return;
+  const oc  = document.createElement('canvas');
+  oc.width  = W; oc.height = H;
+  const ctx = oc.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  const fsize = Math.min(H*.32, W*.28);
+  ctx.font = `900 ${fsize}px 'Bebas Neue',Impact,sans-serif`;
+  ctx.textAlign    = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle    = '#fff';
+  ctx.fillText('NOVA', W/2, H/2);
+  const d = ctx.getImageData(0,0,W,H).data;
+  textPixels = [];
+  const step = 5;
+  for(let y=0;y<H;y+=step)
+    for(let x=0;x<W;x+=step)
+      if(d[(y*W+x)*4+3]>60) textPixels.push(x,y);
+
+  // Assign targets
+  const tl = textPixels.length/2;
+  if(tl>0){
+    for(let i=0;i<N;i++){
+      const j = Math.floor(Math.random()*tl)*2;
+      tx_[i] = textPixels[j];
+      ty_[i] = textPixels[j+1];
+    }
+  }
+}
+
+// ── State ─────────────────────────────────────────────────
+let currentMode = 'drift'; // drift | text | galaxy | chaos | frozen
+let mouseOn = false;
+let rmx=0, rmy=0, smx=0, smy=0;
+let t = 0;
+let rings = [];
+let frameN = 0;
+let lastFpsT = performance.now();
+let fpsCount = 0;
+let fpsVal = 60;
+
+// ── Cursor ────────────────────────────────────────────────
+window.addEventListener('mousemove', e=>{
+  rmx = e.clientX; rmy = e.clientY;
+  dot.style.left = rmx+'px'; dot.style.top = rmy+'px';
+  ring.style.left= rmx+'px'; ring.style.top= rmy+'px';
+  mouseOn = true;
+});
+window.addEventListener('mouseleave',()=>{ mouseOn=false; });
+
+// ── Click = supernova ─────────────────────────────────────
+window.addEventListener('click', e=>{
+  if(e.button!==0) return;
+  nova(e.clientX, e.clientY);
+});
+
+// ── Right click = black hole ──────────────────────────────
+window.addEventListener('contextmenu', e=>{
+  e.preventDefault();
+  hole(e.clientX, e.clientY);
+});
+
+function nova(cx, cy){
+  const div = document.createElement('div');
+  div.className='flash';
+  div.style.setProperty('--fx', cx+'px');
+  div.style.setProperty('--fy', cy+'px');
+  document.body.appendChild(div);
+  setTimeout(()=>div.remove(), 600);
+
+  for(let i=0;i<N;i++){
+    const dx = px[i]-cx, dy = py[i]-cy;
+    const d  = Math.sqrt(dx*dx+dy*dy)+1;
+    const f  = Math.min(400/d, 28) * Math.exp(-d/350);
+    vx[i] += (dx/d)*f;
+    vy[i] += (dy/d)*f;
+    hue[i] = PAL.hMin + Math.random()*(PAL.hMax-PAL.hMin);
+  }
+  rings.push({x:cx,y:cy,r:0,a:1,collapse:false});
+  if(soundOn) sndNova(cx/W);
+}
+
+function hole(cx, cy){
+  for(let i=0;i<N;i++){
+    const dx = cx-px[i], dy = cy-py[i];
+    const d  = Math.sqrt(dx*dx+dy*dy)+1;
+    if(d<25){ resetP(i,false); continue; }
+    const f = Math.min(6000/(d*d), 30);
+    vx[i] += (dx/d)*f*.016;
+    vy[i] += (dy/d)*f*.016;
+  }
+  rings.push({x:cx,y:cy,r:120,a:1,collapse:true});
+}
+
+// ── Keyboard ──────────────────────────────────────────────
+function setMode(m, label){
+  currentMode = m;
+  modeEl.textContent = label;
+}
+
+window.addEventListener('keydown', e=>{
+  switch(e.code){
+    case 'Space':
+      e.preventDefault();
+      if(currentMode==='frozen') setMode('drift','DRIFT');
+      else                       setMode('frozen','FROZEN');
+      break;
+    case 'KeyT':
+      if(currentMode==='text') setMode('drift','DRIFT');
+      else                     setMode('text','TEXT FORM');
+      break;
+    case 'KeyG':
+      if(currentMode==='galaxy') setMode('drift','DRIFT');
+      else                       setMode('galaxy','GALAXY SPIRAL');
+      break;
+    case 'KeyC':
+      if(currentMode==='chaos') setMode('drift','DRIFT');
+      else                      setMode('chaos','CHAOS FIELD');
+      break;
+    case 'KeyR':
+      init(true); setMode('drift','DRIFT');
+      break;
+    case 'KeyS':
+      soundOn=!soundOn;
+      if(soundOn) initAudio();
+      else stopDrone();
+      break;
+    case 'Digit1': setPalette(0); break;
+    case 'Digit2': setPalette(1); break;
+    case 'Digit3': setPalette(2); break;
+  }
+});
+
+// ── Physics ───────────────────────────────────────────────
+function update(dt){
+  if(currentMode==='frozen') return;
+  t += dt * .016;
+
+  smx += (rmx-smx)*.1;
+  smy += (rmy-smy)*.1;
+
+  const cx=W/2, cy=H/2;
+
+  for(let i=0;i<N;i++){
+    // Mode forces
+    switch(currentMode){
+      case 'text':{
+        const ex=tx_[i]-px[i], ey=ty_[i]-py[i];
+        vx[i] += ex*.055;
+        vy[i] += ey*.055;
+        vx[i] *= .82;
+        vy[i] *= .82;
+        break;
+      }
+      case 'galaxy':{
+        const dx=cx-px[i], dy=cy-py[i];
+        const d=Math.sqrt(dx*dx+dy*dy)+1;
+        vx[i] += (dx/d)*.1 + (-dy/d)*.07;
+        vy[i] += (dy/d)*.1 + (dx/d)*.07;
+        break;
+      }
+      case 'chaos':{
+        const nx=px[i]*.0025+t*.4, ny=py[i]*.0025+t*.4;
+        const a=(Math.sin(nx)*Math.cos(ny)+Math.sin(nx*2.1+1.5)*.5)*Math.PI*2;
+        vx[i] += Math.cos(a)*.18;
+        vy[i] += Math.sin(a)*.18;
+        break;
+      }
+      case 'drift':{
+        vx[i] += (Math.random()-.5)*.018;
+        vy[i] += (Math.random()-.5)*.018;
+        break;
+      }
+    }
+
+    // Mouse gravity well
+    if(mouseOn && currentMode!=='text'){
+      const dx=smx-px[i], dy=smy-py[i];
+      const d2=dx*dx+dy*dy, d=Math.sqrt(d2)+1;
+      if(d<450){
+        const inner = d<120;
+        const f = inner ? -5/d : Math.min(2200/d2, 6);
+        vx[i] += (dx/d)*f*.016;
+        vy[i] += (dy/d)*f*.016;
+      }
+    }
+
+    // Damping
+    const damp = currentMode==='text' ? 1 : (currentMode==='chaos' ? .975 : .992);
+    vx[i] *= damp;
+    vy[i] *= damp;
+
+    // Integrate
+    px[i] += vx[i];
+    py[i] += vy[i];
+
+    // Speed + hue shift
+    spd[i] = Math.sqrt(vx[i]*vx[i]+vy[i]*vy[i]);
+    if(currentMode!=='text'){
+      hue[i] += spd[i]*4 - .05;
+      const range = PAL.hMax-PAL.hMin;
+      hue[i] = PAL.hMin + ((hue[i]-PAL.hMin+range*3) % range);
+    }
+
+    // Wrap
+    if(px[i]<-12) px[i]=W+12;
+    else if(px[i]>W+12) px[i]=-12;
+    if(py[i]<-12) py[i]=H+12;
+    else if(py[i]>H+12) py[i]=-12;
+  }
+
+  // Ring update
+  for(let i=rings.length-1;i>=0;i--){
+    const r=rings[i];
+    r.a -= r.collapse ? .05 : .01;
+    r.r += r.collapse ? -12 : 18;
+    if(r.a<=0 || (r.collapse&&r.r<0)) rings.splice(i,1);
+  }
+}
+
+// ── Draw ──────────────────────────────────────────────────
+function draw(){
+  // Trail fade
+  mc.fillStyle='rgba(0,0,0,.15)';
+  mc.fillRect(0,0,W,H);
+  bc.fillStyle='rgba(0,0,0,.2)';
+  bc.fillRect(0,0,W,H);
+
+  // Particles
+  for(let i=0;i<N;i++){
+    const s = spd[i];
+    const sat  = 55 + Math.min(s*200, 40);
+    const lum  = 38 + Math.min(s*250, 52);
+    const alp  = .55 + Math.min(s*4, .45);
+    const r    = sz[i] + Math.min(s*3, 2.5);
+    const h    = hue[i];
+
+    mc.fillStyle=`hsla(${h},${sat}%,${lum}%,${alp})`;
+    mc.beginPath();
+    mc.arc(px[i], py[i], r, 0, 6.283);
+    mc.fill();
+
+    if(s>.3 || r>1.8){
+      bc.fillStyle=`hsla(${h},80%,85%,${alp*.55})`;
+      bc.beginPath();
+      bc.arc(px[i], py[i], r*2, 0, 6.283);
+      bc.fill();
+    }
+  }
+
+  // Constellation lines (sparse, drift/frozen only)
+  if(currentMode==='drift'||currentMode==='frozen'){
+    const STEP=8, THR=75, THR2=THR*THR;
+    mc.lineWidth=.25;
+    for(let i=0;i<N;i+=STEP){
+      for(let j=i+STEP;j<Math.min(i+STEP*10,N);j+=STEP){
+        const dx=px[j]-px[i], dy=py[j]-py[i];
+        const d2=dx*dx+dy*dy;
+        if(d2<THR2){
+          const a=(1-Math.sqrt(d2)/THR)*.12;
+          mc.strokeStyle=`rgba(180,160,255,${a})`;
+          mc.beginPath();
+          mc.moveTo(px[i],py[i]);
+          mc.lineTo(px[j],py[j]);
+          mc.stroke();
+        }
+      }
+    }
+  }
+
+  // Rings
+  for(const r of rings){
+    mc.strokeStyle=r.collapse
+      ? `rgba(120,180,255,${r.a})`
+      : `rgba(255,255,255,${r.a})`;
+    mc.lineWidth=r.collapse?1:1.8;
+    mc.beginPath();
+    mc.arc(r.x,r.y,Math.abs(r.r),0,6.283);
+    mc.stroke();
+  }
+
+  // Mouse glow
+  if(mouseOn){
+    const g=mc.createRadialGradient(smx,smy,0,smx,smy,120);
+    g.addColorStop(0,`hsla(${PAL.hMin+60},80%,70%,.06)`);
+    g.addColorStop(1,'rgba(0,0,0,0)');
+    mc.fillStyle=g;
+    mc.fillRect(smx-120,smy-120,240,240);
+  }
+
+  // Cursor ring expand on mode
+  if(mouseOn){
+    const bigRing = currentMode==='frozen';
+    ring.style.width  = (bigRing?60:36)+'px';
+    ring.style.height = (bigRing?60:36)+'px';
+  }
+}
+
+// ── FPS ───────────────────────────────────────────────────
+function updateFPS(now){
+  fpsCount++;
+  if(now-lastFpsT>700){
+    fpsVal=Math.round(fpsCount*1000/(now-lastFpsT));
+    fpsCount=0; lastFpsT=now;
+    infoEl.textContent=`${fpsVal} FPS · ${N.toLocaleString()} PARTICLES`;
+  }
+}
+
+// ── Loop ──────────────────────────────────────────────────
+let lastTs=0;
+function loop(ts){
+  const dt=Math.min((ts-lastTs)/16.67, 3);
+  lastTs=ts;
+  updateFPS(ts);
+  update(dt);
+  draw();
+  requestAnimationFrame(loop);
+}
+
+// ── Web Audio ─────────────────────────────────────────────
+let audioCtx, gainNode, o1, o2, soundOn=false;
+
+function initAudio(){
+  if(audioCtx) return;
+  audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  gainNode = audioCtx.createGain();
+  gainNode.gain.setValueAtTime(.0, audioCtx.currentTime);
+  gainNode.gain.linearRampToValueAtTime(.035, audioCtx.currentTime+2);
+  gainNode.connect(audioCtx.destination);
+
+  o1=audioCtx.createOscillator(); o1.type='sine';
+  o1.frequency.setValueAtTime(55, audioCtx.currentTime);
+  o1.connect(gainNode); o1.start();
+
+  o2=audioCtx.createOscillator(); o2.type='sine';
+  o2.frequency.setValueAtTime(55.4, audioCtx.currentTime);
+  o2.connect(gainNode); o2.start();
+}
+
+function stopDrone(){
+  if(!gainNode) return;
+  gainNode.gain.linearRampToValueAtTime(.0, audioCtx.currentTime+1);
+}
+
+function sndNova(pan){
+  if(!audioCtx) return;
+  const o=audioCtx.createOscillator();
+  const g=audioCtx.createGain();
+  o.type='sawtooth';
+  o.frequency.setValueAtTime(180, audioCtx.currentTime);
+  o.frequency.exponentialRampToValueAtTime(35, audioCtx.currentTime+.5);
+  g.gain.setValueAtTime(.12, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(.001, audioCtx.currentTime+.5);
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(); o.stop(audioCtx.currentTime+.55);
+}
+
+// ── Touch ─────────────────────────────────────────────────
+window.addEventListener('touchmove', e=>{
+  e.preventDefault();
+  const t=e.touches[0];
+  rmx=t.clientX; rmy=t.clientY; mouseOn=true;
+},{passive:false});
+window.addEventListener('touchstart', e=>{
+  const t=e.touches[0];
+  nova(t.clientX, t.clientY);
+});
+window.addEventListener('touchend',()=>{ mouseOn=false; });
+
+// ── Intro sequence ────────────────────────────────────────
+// Load → drift → after 1.2s form text → after 3.8s drift
+function runIntro(){
+  resize();
+  init(true);
+  requestAnimationFrame(loop);
+
+  setTimeout(()=>{
+    if(textPixels.length>0) setMode('text','NOVA');
+  }, 1200);
+
+  setTimeout(()=>{
+    setMode('drift','DRIFT');
+  }, 5500);
+}
+
+document.fonts.ready.then(runIntro).catch(runIntro);
+</script>
+</body>
+</html>

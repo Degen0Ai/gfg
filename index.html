@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ronne Home Solutions — West Michigan Home Improvement</title>
+<meta name="description" content="Honest, affordable home improvement in West Michigan. Licensed & insured. Kitchens, bathrooms, flooring, basements and more."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@1,400;1,600&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+:root {
+  --ink:   #0E0C0A;
+  --ink2:  #3A3632;
+  --dim:   #7A756E;
+  --clay:  #B5622C;
+  --cream: #F6F1E8;
+  --cream2:#EDE7DC;
+  --snow:  #FEFEF9;
+  --bdr:   #D9D2C4;
+  --hero:  #0A0806;
+}
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body { background:var(--cream); color:var(--ink); font-family:'Inter',sans-serif; overflow-x:hidden; -webkit-font-smoothing:antialiased; }
+
+/* ── progress bar ── */
+#pgbar { position:fixed; top:0; left:0; height:2px; width:0; background:var(--clay); z-index:10000; transition:width .08s linear; }
+
+/* ── scrollbar ── */
+::-webkit-scrollbar{width:3px;} ::-webkit-scrollbar-thumb{background:var(--clay);}
+
+/* ── logo animation ── */
+.lp  { stroke-dasharray:340; stroke-dashoffset:340; animation:draw 1.1s cubic-bezier(.4,0,.2,1) .15s forwards; }
+.lp2 { stroke-dasharray:340; stroke-dashoffset:340; animation:draw 1.1s cubic-bezier(.4,0,.2,1) .3s  forwards; }
+@keyframes draw { to { stroke-dashoffset:0; } }
+
+/* ── navbar ── */
+#nav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  padding:0 40px;
+  display:flex; align-items:center; justify-content:space-between;
+  height:72px;
+  background:transparent;
+  transition:background .35s, border-color .35s, box-shadow .35s;
+  border-bottom:1px solid transparent;
+}
+#nav.dark  { background:rgba(10,8,6,.96); border-color:rgba(255,255,255,.06); box-shadow:0 2px 32px rgba(0,0,0,.2); }
+#nav.light { background:rgba(246,241,232,.97); border-color:var(--bdr); box-shadow:0 2px 24px rgba(0,0,0,.05); }
+.nl { font-size:.68rem; font-weight:500; letter-spacing:.14em; text-transform:uppercase; text-decoration:none; transition:opacity .2s; cursor:pointer; }
+.nl:hover { opacity:.6; }
+
+/* ── buttons ── */
+.bc {
+  display:inline-flex; align-items:center; gap:10px;
+  background:var(--clay); color:#fff;
+  padding:14px 28px; font-size:.68rem; font-weight:600; letter-spacing:.15em; text-transform:uppercase;
+  text-decoration:none; border:none; cursor:pointer; position:relative; overflow:hidden;
+  transition:transform .22s cubic-bezier(.34,1.2,.64,1), box-shadow .22s;
+  will-change:transform;
+}
+.bc::after { content:''; position:absolute; inset:0; background:rgba(0,0,0,.15); opacity:0; transition:opacity .2s; }
+.bc:hover { box-shadow:0 14px 40px rgba(181,98,44,.4); }
+.bc:hover::after { opacity:1; }
+.bc>* { position:relative; z-index:1; }
+
+.bg {
+  display:inline-flex; align-items:center; gap:8px;
+  border:1px solid rgba(255,255,255,.45); color:#fff;
+  padding:13px 26px; font-size:.68rem; font-weight:600; letter-spacing:.15em; text-transform:uppercase;
+  text-decoration:none; cursor:pointer; background:transparent;
+  transition:background .22s, color .22s, border-color .22s, transform .22s;
+  will-change:transform;
+}
+.bg:hover { background:#fff; color:var(--ink); border-color:#fff; }
+
+.bc-dark {
+  display:inline-flex; align-items:center; gap:10px;
+  background:var(--ink); color:#fff;
+  padding:14px 28px; font-size:.68rem; font-weight:600; letter-spacing:.15em; text-transform:uppercase;
+  text-decoration:none; border:none; cursor:pointer; position:relative; overflow:hidden;
+  transition:transform .22s, box-shadow .22s; will-change:transform;
+}
+.bc-dark::after { content:''; position:absolute; inset:0; background:var(--clay); transform:scaleX(0); transform-origin:left; transition:transform .35s cubic-bezier(.4,0,.2,1); }
+.bc-dark:hover { box-shadow:0 12px 36px rgba(0,0,0,.2); }
+.bc-dark:hover::after { transform:scaleX(1); }
+.bc-dark>* { position:relative; z-index:1; }
+
+/* ── hero ken burns ── */
+@keyframes kenBurns { from { transform:scale(1.1); } to { transform:scale(1.0); } }
+#hero-img { animation:kenBurns 10s cubic-bezier(.25,0,.4,1) forwards; }
+
+/* ── reveal animations ── */
+.rv  { opacity:0; transform:translateY(40px); transition:opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); }
+.rvl { opacity:0; transform:translateX(-44px); transition:opacity .75s cubic-bezier(.16,1,.3,1), transform .75s cubic-bezier(.16,1,.3,1); }
+.rvr { opacity:0; transform:translateX(44px); transition:opacity .75s cubic-bezier(.16,1,.3,1), transform .75s cubic-bezier(.16,1,.3,1); }
+.rvs { opacity:0; transform:scale(.94); transition:opacity .75s cubic-bezier(.16,1,.3,1), transform .75s cubic-bezier(.16,1,.3,1); }
+.in  { opacity:1!important; transform:none!important; }
+.d1{transition-delay:.07s!important}.d2{transition-delay:.14s!important}.d3{transition-delay:.21s!important}
+.d4{transition-delay:.28s!important}.d5{transition-delay:.35s!important}.d6{transition-delay:.42s!important}
+@media(prefers-reduced-motion:reduce){.rv,.rvl,.rvr,.rvs{opacity:1;transform:none;transition:none;}}
+
+/* clip-line reveal */
+.cl { overflow:hidden; }
+.cl .ci { display:block; transform:translateY(108%); transition:transform .85s cubic-bezier(.16,1,.3,1); }
+.cl.in .ci { transform:translateY(0); }
+
+/* image scale reveal */
+.ir { overflow:hidden; }
+.ir img { display:block; width:100%; height:100%; object-fit:cover; transform:scale(1.07); transition:transform .95s cubic-bezier(.16,1,.3,1); }
+.ir.in img { transform:scale(1); }
+
+/* ── section label ── */
+.slbl { display:inline-flex; align-items:center; gap:10px; font-size:.6rem; font-weight:700; letter-spacing:.28em; text-transform:uppercase; color:var(--clay); margin-bottom:16px; }
+.slbl::before { content:''; width:20px; height:1px; background:var(--clay); }
+
+/* ── before/after slider ── */
+.ba { position:relative; overflow:hidden; cursor:col-resize; user-select:none; }
+.ba-after { position:absolute; inset:0; clip-path:inset(0 50% 0 0); }
+.ba-line { position:absolute; top:0; bottom:0; left:50%; width:2px; background:#fff; z-index:8; transform:translateX(-50%); }
+.ba-btn { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:44px; height:44px; border-radius:50%; background:#fff; box-shadow:0 4px 18px rgba(0,0,0,.25); display:flex; align-items:center; justify-content:center; z-index:9; }
+.ba-tag { position:absolute; top:14px; font-size:.58rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; padding:4px 10px; }
+.ba-tag.b { left:14px; background:rgba(0,0,0,.55); color:#fff; }
+.ba-tag.a { right:14px; background:var(--clay); color:#fff; }
+
+/* ── horizontal gallery ── */
+.hsg { display:flex; gap:16px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; padding-bottom:4px; }
+.hsg::-webkit-scrollbar { display:none; }
+.hsc { flex-shrink:0; width:340px; height:480px; overflow:hidden; cursor:pointer; scroll-snap-align:start; position:relative; }
+.hsc img { width:100%; height:100%; object-fit:cover; transition:transform .6s cubic-bezier(.4,0,.2,1); display:block; }
+.hsc:hover img { transform:scale(1.06); }
+.hsc .hcap { position:absolute; inset:0; background:linear-gradient(to top,rgba(10,8,6,.78) 0%,transparent 55%); display:flex; align-items:flex-end; padding:22px; }
+@media(min-width:1024px){.hsc{width:400px;height:520px;}}
+
+/* ── service cards ── */
+.sc { background:var(--snow); border:1px solid var(--bdr); padding:36px 32px; cursor:pointer; transition:transform .28s, border-color .28s, box-shadow .28s; position:relative; overflow:hidden; }
+.sc::after { content:''; position:absolute; bottom:0; left:0; right:0; height:3px; background:var(--clay); transform:scaleX(0); transform-origin:left; transition:transform .35s cubic-bezier(.4,0,.2,1); }
+.sc:hover { transform:translateY(-5px); border-color:rgba(181,98,44,.35); box-shadow:0 20px 50px rgba(0,0,0,.07); }
+.sc:hover::after { transform:scaleX(1); }
+.sc-num { font-family:'Bebas Neue',sans-serif; font-size:3.2rem; line-height:1; color:rgba(14,12,10,.06); margin-bottom:14px; transition:color .3s; }
+.sc:hover .sc-num { color:rgba(181,98,44,.12); }
+
+/* ── testimonial ── */
+.tc { background:var(--snow); border:1px solid var(--bdr); padding:32px; transition:transform .28s, box-shadow .28s; }
+.tc:hover { transform:translateY(-4px); box-shadow:0 18px 48px rgba(0,0,0,.06); }
+
+/* ── form fields ── */
+.fw { position:relative; }
+.fi { width:100%; padding:22px 16px 8px; background:var(--snow); border:1px solid var(--bdr); color:var(--ink); font-family:'Inter',sans-serif; font-size:.9rem; outline:none; transition:border-color .2s, box-shadow .2s; }
+.fi:focus { border-color:var(--clay); box-shadow:0 0 0 3px rgba(181,98,44,.1); }
+.fl { position:absolute; left:16px; top:15px; font-size:.74rem; font-weight:500; color:var(--dim); pointer-events:none; transition:transform .2s, color .2s; transform-origin:left; }
+.fi:focus~.fl,.fi:not(:placeholder-shown)~.fl { transform:translateY(-9px) scale(.78); color:var(--clay); }
+.fi::placeholder { color:transparent; }
+textarea.fi { resize:vertical; min-height:112px; padding-top:26px; }
+select.fi { appearance:none; padding-top:16px; padding-bottom:8px; cursor:pointer; }
+
+/* ── mob menu ── */
+#mob { max-height:0; overflow:hidden; transition:max-height .38s cubic-bezier(.4,0,.2,1); }
+#mob.open { max-height:440px; }
+
+/* ── grain overlay ── */
+body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E"); pointer-events:none; z-index:1; opacity:.4; }
+
+/* ── statement section grain ── */
+.clay-grain::before { content:''; position:absolute; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.06'/%3E%3C/svg%3E"); pointer-events:none; z-index:1; }
+
+/* ── process steps ── */
+.proc-step { text-align:center; }
+.proc-num { font-family:'Bebas Neue',sans-serif; font-size:5rem; line-height:1; color:rgba(14,12,10,.08); margin-bottom:4px; transition:color .35s; }
+.proc-step:hover .proc-num { color:var(--clay); }
+.proc-step:hover .proc-bar { transform:scaleX(1); }
+.proc-bar { width:32px; height:2px; background:var(--clay); margin:0 auto 14px; transform:scaleX(0); transition:transform .4s cubic-bezier(.4,0,.2,1); }
+</style>
+</head>
+<body>
+
+<div id="pgbar" aria-hidden="true"></div>
+
+<!-- ═══════════════════════════════════
+     NAVBAR
+═══════════════════════════════════ -->
+<nav id="nav" aria-label="Main navigation">
+
+  <!-- Logo — reconstructed from original: two overlapping closed triangles -->
+  <a href="#home" style="display:flex;align-items:center;gap:12px;text-decoration:none" aria-label="Ronne Home Solutions">
+    <svg width="52" height="44" viewBox="0 0 104 88" fill="none" aria-hidden="true">
+      <!-- Left mountain (closed triangle) -->
+      <polygon class="lp"  points="4,80 34,8 64,80" stroke="#B5622C" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Right mountain (closed triangle, overlapping) -->
+      <polygon class="lp2" points="40,80 70,8 100,80" stroke="#B5622C" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div id="logo-txt">
+      <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:.14em;font-size:1rem;line-height:1;color:#fff">RONNE</div>
+      <div style="font-size:.47rem;letter-spacing:.22em;font-weight:600;text-transform:uppercase;color:rgba(255,255,255,.38)">HOME SOLUTIONS, LLC</div>
+    </div>
+  </a>
+
+  <div class="hidden md:flex items-center gap-8" id="nav-links">
+    <a href="#services" class="nl" style="color:rgba(255,255,255,.7)">Services</a>
+    <a href="#work"     class="nl" style="color:rgba(255,255,255,.7)">Work</a>
+    <a href="#about"    class="nl" style="color:rgba(255,255,255,.7)">About</a>
+    <a href="#reviews"  class="nl" style="color:rgba(255,255,255,.7)">Reviews</a>
+    <a href="#contact"  class="nl" style="color:rgba(255,255,255,.7)">Contact</a>
+  </div>
+
+  <div class="hidden md:block">
+    <a href="tel:+16168559812" class="bc mag" style="padding:11px 20px;font-size:.62rem"><span>(616) 855-9812</span></a>
+  </div>
+
+  <button id="mbt" class="md:hidden p-1.5 flex flex-col gap-1.5" aria-label="Menu" aria-expanded="false">
+    <span class="w-5 h-px bg-white block"></span>
+    <span class="w-3 h-px bg-white/35 block ml-auto"></span>
+    <span class="w-5 h-px bg-white block"></span>
+  </button>
+</nav>
+
+<!-- Mobile menu -->
+<div id="mob" style="position:fixed;top:72px;left:0;right:0;z-index:190;background:var(--ink);border-bottom:1px solid rgba(255,255,255,.06)">
+  <div style="padding:28px 40px;display:flex;flex-direction:column;gap:18px">
+    <a href="#services" class="nl" style="color:rgba(255,255,255,.65);font-size:.82rem" onclick="cm()">Services</a>
+    <a href="#work"     class="nl" style="color:rgba(255,255,255,.65);font-size:.82rem" onclick="cm()">Work</a>
+    <a href="#about"    class="nl" style="color:rgba(255,255,255,.65);font-size:.82rem" onclick="cm()">About</a>
+    <a href="#reviews"  class="nl" style="color:rgba(255,255,255,.65);font-size:.82rem" onclick="cm()">Reviews</a>
+    <a href="#contact"  class="nl" style="color:rgba(255,255,255,.65);font-size:.82rem" onclick="cm()">Contact</a>
+    <a href="#contact" class="bc mag" style="justify-content:center;margin-top:6px" onclick="cm()"><span>Get Free Estimate</span></a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     HERO — CINEMATIC
+═══════════════════════════════════ -->
+<section id="home" style="position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;background:var(--hero);overflow:hidden" aria-label="Hero">
+
+  <div style="position:absolute;inset:0" aria-hidden="true">
+    <img id="hero-img"
+         src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1800&q=90"
+         alt="" loading="eager" style="width:100%;height:100%;object-fit:cover;object-position:center;will-change:transform"/>
+    <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,8,6,1) 0%,rgba(10,8,6,.72) 38%,rgba(10,8,6,.28) 72%,rgba(10,8,6,.15) 100%)"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(10,8,6,.52) 0%,transparent 60%)"></div>
+  </div>
+
+  <div style="position:relative;z-index:10;width:100%;max-width:1300px;margin:0 auto;padding:0 40px 88px">
+
+    <div class="rv" style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.1);padding:7px 14px;margin-bottom:32px">
+      <div style="width:5px;height:5px;border-radius:50%;background:var(--clay);animation:blink 2s infinite"></div>
+      <span style="font-size:.58rem;letter-spacing:.2em;font-weight:600;text-transform:uppercase;color:rgba(255,255,255,.45)">Licensed &amp; Insured · West Michigan</span>
+    </div>
+    <style>@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}</style>
+
+    <div>
+      <div class="cl"><span class="ci" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(4.5rem,15vw,14rem);line-height:.86;letter-spacing:.02em;color:#fff;display:block">RONNE</span></div>
+    </div>
+    <div style="margin-bottom:28px">
+      <div class="cl d1"><span class="ci" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(1.1rem,3.2vw,2.8rem);letter-spacing:.22em;color:var(--clay);display:block">HOME SOLUTIONS, LLC</span></div>
+    </div>
+
+    <p class="rv d2" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.1rem,2vw,1.55rem);color:rgba(255,255,255,.5);line-height:1.5;max-width:480px;margin-bottom:36px">
+      Honest, affordable home improvement<br/>from the lakeshore to Grand Rapids.
+    </p>
+
+    <div class="rv d3" style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:52px">
+      <a href="#contact" class="bc mag"><span>Get a Free Estimate</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="position:relative;z-index:1"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#work" class="bg">See Our Work</a>
+    </div>
+
+    <div class="rv d4" style="display:flex;flex-wrap:wrap;gap:28px;font-size:.62rem;letter-spacing:.14em;color:rgba(255,255,255,.3);text-transform:uppercase;font-weight:500">
+      <span>✓ Licensed &amp; Insured</span>
+      <span>✓ Free Estimates</span>
+      <span>✓ 5-Star Rated</span>
+      <span>✓ Clean Job Sites</span>
+    </div>
+  </div>
+
+  <div style="position:absolute;bottom:32px;right:40px;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:10" aria-hidden="true">
+    <span style="writing-mode:vertical-lr;font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.22);font-weight:600">Scroll</span>
+    <div style="width:1px;height:44px;background:linear-gradient(to bottom,var(--clay),transparent);animation:sdrop 2s ease-in-out infinite"></div>
+  </div>
+  <style>@keyframes sdrop{0%{opacity:.2;clip-path:inset(100% 0 0 0)}60%{opacity:1;clip-path:inset(0 0 0 0)}100%{opacity:.2;clip-path:inset(0 0 100% 0)}}</style>
+</section>
+
+<!-- ═══════════════════════════════════
+     GEO STRIP
+═══════════════════════════════════ -->
+<div style="background:var(--clay);padding:13px 40px;overflow:hidden" aria-label="Service area">
+  <div style="display:flex;flex-wrap:wrap;justify-content:center">
+    <span style="font-size:.6rem;letter-spacing:.22em;font-weight:600;text-transform:uppercase;color:rgba(255,255,255,.7);padding:0 18px;border-right:1px solid rgba(255,255,255,.2)">Holland</span>
+    <span style="font-size:.6rem;letter-spacing:.22em;font-weight:600;text-transform:uppercase;color:rgba(255,255,255,.7);padding:0 18px;border-right:1px solid rgba(255,255,255,.2)">Grand Rapids</span>
+    <span style="font-size:.6rem;letter-spacing:.22em;font-weight:600;text-transform:uppercase;color:rgba(255,255,255,.7);padding:0 18px;border-right:1px solid rgba(255,255,255,.2)">Zeeland</span>
+    <span style="font-size:.6rem;letter-spacing:.22em;font-weight:600;text-transform:uppercase;color:rgba(255,255,255,.7);padding:0 18px;border-right:1px solid rgba(255,255,255,.2)">Hudsonville</span>
+    <span style="font-size:.6rem;letter-spacing:.22em;font-weight:600;text-transform:uppercase;color:rgba(255,255,255,.7);padding:0 18px;border-right:1px solid rgba(255,255,255,.2)">Grandville</span>
+    <span style="font-size:.6rem;letter-spacing:.22em;font-weight:600;text-transform:uppercase;color:rgba(255,255,255,.7);padding:0 18px;border-right:1px solid rgba(255,255,255,.2)">Rockford</span>
+    <span style="font-size:.6rem;letter-spacing:.22em;font-weight:600;text-transform:uppercase;color:rgba(255,255,255,.7);padding:0 18px">Byron Center</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     STATEMENT SECTION — THE WOW MOMENT
+═══════════════════════════════════ -->
+<section class="clay-grain" style="background:var(--clay);padding:120px 40px;position:relative;overflow:hidden;text-align:center" aria-label="Our promise">
+
+  <!-- Ghost RONNE behind text -->
+  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;pointer-events:none" aria-hidden="true">
+    <span style="font-family:'Bebas Neue',sans-serif;font-size:clamp(14rem,42vw,46rem);line-height:.85;color:rgba(0,0,0,.055);white-space:nowrap;letter-spacing:-.01em;user-select:none">RONNE</span>
+  </div>
+
+  <div style="position:relative;z-index:2;max-width:900px;margin:0 auto">
+    <div class="rv" style="font-size:.62rem;letter-spacing:.26em;font-weight:700;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:28px">The Ronne Promise</div>
+
+    <h2 class="rv d1" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,9vw,8.5rem);letter-spacing:.03em;line-height:.9;color:#fff;margin-bottom:32px">
+      DONE RIGHT.<br/>EVERY TIME.
+    </h2>
+
+    <div style="width:56px;height:2px;background:rgba(255,255,255,.35);margin:0 auto 32px" class="rv d2"></div>
+
+    <p class="rv d3" style="font-size:1.05rem;color:rgba(255,255,255,.65);line-height:1.8;max-width:520px;margin:0 auto 44px;font-weight:300">
+      We show up when we say we will. We work clean. We charge a fair price. We don't upsell you on work you don't need. That's been our standard since day one — and it always will be.
+    </p>
+
+    <div class="rv d4" style="display:grid;grid-template-columns:repeat(3,auto);justify-content:center;gap:0;border:1px solid rgba(255,255,255,.15);max-width:560px;margin:0 auto">
+      <div style="padding:22px 32px;border-right:1px solid rgba(255,255,255,.15)">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:#fff;line-height:1">150+</div>
+        <div style="font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.45);font-weight:600;margin-top:4px">Projects</div>
+      </div>
+      <div style="padding:22px 32px;border-right:1px solid rgba(255,255,255,.15)">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:#fff;line-height:1">5★</div>
+        <div style="font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.45);font-weight:600;margin-top:4px">Rated</div>
+      </div>
+      <div style="padding:22px 32px">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:#fff;line-height:1">7+</div>
+        <div style="font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.45);font-weight:600;margin-top:4px">Years</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     SERVICES
+═══════════════════════════════════ -->
+<section id="services" style="padding:100px 0;background:var(--cream)">
+  <div style="max-width:1300px;margin:0 auto;padding:0 40px">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:20px;margin-bottom:56px">
+      <div>
+        <div class="slbl rv">What We Do</div>
+        <h2 class="rv d1" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,6vw,5.2rem);letter-spacing:.03em;line-height:.9;color:var(--ink)">Our Services</h2>
+      </div>
+      <p class="rv d2" style="font-size:.88rem;color:var(--dim);max-width:300px;line-height:1.75">Every job handled with skill, honesty, and respect for your home.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px">
+      <div class="sc rv">
+        <div class="sc-num">01</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.55rem;letter-spacing:.04em;color:var(--ink);margin-bottom:10px">Kitchen Remodeling</div>
+        <p style="font-size:.8rem;line-height:1.7;color:var(--dim)">Full kitchen renovations, cabinet installs, countertops, and backsplash tile.</p>
+      </div>
+      <div class="sc rv d1">
+        <div class="sc-num">02</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.55rem;letter-spacing:.04em;color:var(--ink);margin-bottom:10px">Bathroom Renovation</div>
+        <p style="font-size:.8rem;line-height:1.7;color:var(--dim)">Tile, vanities, fixtures, showers, and complete bathroom overhauls.</p>
+      </div>
+      <div class="sc rv d2">
+        <div class="sc-num">03</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.55rem;letter-spacing:.04em;color:var(--ink);margin-bottom:10px">Hardwood &amp; Tile Flooring</div>
+        <p style="font-size:.8rem;line-height:1.7;color:var(--dim)">Hardwood, luxury vinyl plank, tile, and laminate — installed right the first time.</p>
+      </div>
+      <div class="sc rv d1">
+        <div class="sc-num">04</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.55rem;letter-spacing:.04em;color:var(--ink);margin-bottom:10px">Basement Finishing</div>
+        <p style="font-size:.8rem;line-height:1.7;color:var(--dim)">Turn an unfinished basement into livable, beautiful space — framing to final finish.</p>
+      </div>
+      <div class="sc rv d2">
+        <div class="sc-num">05</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.55rem;letter-spacing:.04em;color:var(--ink);margin-bottom:10px">Interior Painting</div>
+        <p style="font-size:.8rem;line-height:1.7;color:var(--dim)">Walls, ceilings, trim, and cabinets — clean lines, no mess left behind.</p>
+      </div>
+      <div class="sc rv d3">
+        <div class="sc-num">06</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.55rem;letter-spacing:.04em;color:var(--ink);margin-bottom:10px">Drywall · Trim · Repairs</div>
+        <p style="font-size:.8rem;line-height:1.7;color:var(--dim)">Patching, hanging, finishing, door installs, trim work, and general home repairs.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:44px;text-align:center" class="rv d4">
+      <a href="#contact" class="bc mag"><span>Talk to Us About Your Project</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     HOW IT WORKS
+═══════════════════════════════════ -->
+<section style="padding:100px 0;background:var(--snow);border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr)">
+  <div style="max-width:1300px;margin:0 auto;padding:0 40px">
+    <div style="text-align:center;margin-bottom:64px">
+      <div class="slbl rv" style="justify-content:center">Simple Process</div>
+      <h2 class="rv d1" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,6vw,5.2rem);letter-spacing:.03em;line-height:.9;color:var(--ink)">How It Works</h2>
+    </div>
+
+    <!-- Steps with connecting line -->
+    <div style="position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:0">
+      <!-- Connector line -->
+      <div style="position:absolute;top:36px;left:12.5%;right:12.5%;height:1px;background:var(--bdr)" aria-hidden="true"></div>
+
+      <div class="proc-step rv">
+        <div class="proc-num">01</div>
+        <div class="proc-bar"></div>
+        <div style="font-weight:600;font-size:.9rem;color:var(--ink);margin-bottom:8px">Reach Out</div>
+        <p style="font-size:.78rem;line-height:1.7;color:var(--dim)">Call, text, or use the form. We respond fast — usually same day.</p>
+      </div>
+      <div class="proc-step rv d1">
+        <div class="proc-num">02</div>
+        <div class="proc-bar"></div>
+        <div style="font-weight:600;font-size:.9rem;color:var(--ink);margin-bottom:8px">Free Estimate</div>
+        <p style="font-size:.78rem;line-height:1.7;color:var(--dim)">We come to you, assess the project, and give you a clear honest quote.</p>
+      </div>
+      <div class="proc-step rv d2">
+        <div class="proc-num">03</div>
+        <div class="proc-bar"></div>
+        <div style="font-weight:600;font-size:.9rem;color:var(--ink);margin-bottom:8px">We Get to Work</div>
+        <p style="font-size:.78rem;line-height:1.7;color:var(--dim)">Skilled crew shows up on time, works clean, and keeps you informed.</p>
+      </div>
+      <div class="proc-step rv d3">
+        <div class="proc-num">04</div>
+        <div class="proc-bar"></div>
+        <div style="font-weight:600;font-size:.9rem;color:var(--ink);margin-bottom:8px">You Love It</div>
+        <p style="font-size:.78rem;line-height:1.7;color:var(--dim)">We walk through with you, fix anything needed, and you're done.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     BEFORE / AFTER  (real project photos)
+═══════════════════════════════════ -->
+<section id="work" style="padding:100px 0;background:var(--cream2)">
+  <div style="max-width:1300px;margin:0 auto;padding:0 40px">
+    <div style="margin-bottom:56px">
+      <div class="slbl rv">Real Results</div>
+      <h2 class="rv d1" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,6vw,5.2rem);letter-spacing:.03em;line-height:.9;color:var(--ink)">Before &amp; After</h2>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+
+      <!-- Replace image src with your real photos below -->
+      <div class="rvs">
+        <div class="ba" style="height:400px" data-ba>
+          <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=900&q=80" alt="Before — Zeeland kitchen backsplash" style="width:100%;height:100%;object-fit:cover"/>
+          <div class="ba-after">
+            <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=900&q=80" alt="After — Zeeland kitchen backsplash" style="width:100%;height:100%;object-fit:cover"/>
+          </div>
+          <div class="ba-line"></div>
+          <div class="ba-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#0E0C0A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-4-4-4 4M3 16l4 4 4-4"/><line x1="17" y1="4" x2="17" y2="20"/><line x1="7" y1="4" x2="7" y2="20"/></svg></div>
+          <div class="ba-tag b">Before</div><div class="ba-tag a">After</div>
+        </div>
+        <p style="margin-top:12px;font-size:.7rem;letter-spacing:.07em;color:var(--dim);font-weight:500">Zeeland, MI — Kitchen Backsplash Update</p>
+      </div>
+
+      <div class="rvs d1">
+        <div class="ba" style="height:400px" data-ba>
+          <img src="https://images.unsplash.com/photo-1560448204-603b3fc33ddc?w=900&q=80" alt="Before — Natural Hickory Flooring" style="width:100%;height:100%;object-fit:cover"/>
+          <div class="ba-after">
+            <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=900&q=80" alt="After — Natural Hickory Flooring" style="width:100%;height:100%;object-fit:cover"/>
+          </div>
+          <div class="ba-line"></div>
+          <div class="ba-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#0E0C0A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-4-4-4 4M3 16l4 4 4-4"/><line x1="17" y1="4" x2="17" y2="20"/><line x1="7" y1="4" x2="7" y2="20"/></svg></div>
+          <div class="ba-tag b">Before</div><div class="ba-tag a">After</div>
+        </div>
+        <p style="margin-top:12px;font-size:.7rem;letter-spacing:.07em;color:var(--dim);font-weight:500">Byron Center, MI — Solid Hardwood, Natural Hickory</p>
+      </div>
+
+      <div class="rvs d2">
+        <div class="ba" style="height:400px" data-ba>
+          <img src="https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=900&q=80" alt="Before — Rockford Kitchen" style="width:100%;height:100%;object-fit:cover"/>
+          <div class="ba-after">
+            <img src="https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=900&q=80" alt="After — Rockford Kitchen" style="width:100%;height:100%;object-fit:cover"/>
+          </div>
+          <div class="ba-line"></div>
+          <div class="ba-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#0E0C0A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-4-4-4 4M3 16l4 4 4-4"/><line x1="17" y1="4" x2="17" y2="20"/><line x1="7" y1="4" x2="7" y2="20"/></svg></div>
+          <div class="ba-tag b">Before</div><div class="ba-tag a">After</div>
+        </div>
+        <p style="margin-top:12px;font-size:.7rem;letter-spacing:.07em;color:var(--dim);font-weight:500">Rockford, MI — New tile, floating shelves, full kitchen refresh</p>
+      </div>
+
+      <div class="rvs d3">
+        <div class="ba" style="height:400px" data-ba>
+          <img src="https://images.unsplash.com/photo-1615874694520-474822394e73?w=900&q=80" alt="Before — Grandville Basement" style="width:100%;height:100%;object-fit:cover"/>
+          <div class="ba-after">
+            <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=900&q=80" alt="After — Grandville Basement" style="width:100%;height:100%;object-fit:cover"/>
+          </div>
+          <div class="ba-line"></div>
+          <div class="ba-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#0E0C0A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-4-4-4 4M3 16l4 4 4-4"/><line x1="17" y1="4" x2="17" y2="20"/><line x1="7" y1="4" x2="7" y2="20"/></svg></div>
+          <div class="ba-tag b">Before</div><div class="ba-tag a">After</div>
+        </div>
+        <p style="margin-top:12px;font-size:.7rem;letter-spacing:.07em;color:var(--dim);font-weight:500">Grandville, MI — Basement Finishing</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     GALLERY — horizontal scroll
+═══════════════════════════════════ -->
+<section style="padding:100px 0;background:var(--ink);overflow:hidden">
+  <div style="max-width:1300px;margin:0 auto;padding:0 40px;margin-bottom:40px">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px">
+      <div>
+        <div class="rv" style="display:inline-flex;align-items:center;gap:10px;font-size:.6rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:16px">
+          <span style="width:20px;height:1px;background:rgba(255,255,255,.3);display:inline-block"></span>Portfolio
+        </div>
+        <h2 class="rv d1" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,6vw,5.2rem);letter-spacing:.03em;line-height:.9;color:#fff">Selected Work</h2>
+      </div>
+      <div class="rv d2" style="display:flex;align-items:center;gap:10px">
+        <button id="sgprev" aria-label="Previous"
+          style="width:44px;height:44px;border:1px solid rgba(255,255,255,.14);background:transparent;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s"
+          onmouseenter="this.style.background='var(--clay)';this.style.borderColor='var(--clay)'"
+          onmouseleave="this.style.background='transparent';this.style.borderColor='rgba(255,255,255,.14)'">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </button>
+        <button id="sgnext" aria-label="Next"
+          style="width:44px;height:44px;border:1px solid rgba(255,255,255,.14);background:transparent;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s"
+          onmouseenter="this.style.background='var(--clay)';this.style.borderColor='var(--clay)'"
+          onmouseleave="this.style.background='transparent';this.style.borderColor='rgba(255,255,255,.14)'">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="sgtrack" class="hsg" style="padding:0 40px">
+    <div class="hsc rv">
+      <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=700&q=80" alt="Grand Rapids kitchen remodel" loading="lazy"/>
+      <div class="hcap"><p style="font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;font-weight:700">Grand Rapids · Kitchen Remodel</p></div>
+    </div>
+    <div class="hsc rv d1">
+      <img src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=700&q=80" alt="Bathroom tile" loading="lazy"/>
+      <div class="hcap"><p style="font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;font-weight:700">Holland · Bathroom Tile</p></div>
+    </div>
+    <div class="hsc rv d2">
+      <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=700&q=80" alt="Grandville basement" loading="lazy"/>
+      <div class="hcap"><p style="font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;font-weight:700">Grandville · Basement Finish</p></div>
+    </div>
+    <div class="hsc rv d3">
+      <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=700&q=80" alt="Hardwood floors" loading="lazy"/>
+      <div class="hcap"><p style="font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;font-weight:700">Byron Center · Natural Hickory</p></div>
+    </div>
+    <div class="hsc rv d4">
+      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80" alt="Interior painting" loading="lazy"/>
+      <div class="hcap"><p style="font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;font-weight:700">Zeeland · Interior Paint</p></div>
+    </div>
+    <div class="hsc rv d5">
+      <img src="https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=700&q=80" alt="Rockford kitchen" loading="lazy"/>
+      <div class="hcap"><p style="font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;font-weight:700">Rockford · Kitchen Refresh</p></div>
+    </div>
+    <div class="hsc rv d6">
+      <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=700&q=80" alt="Zeeland backsplash" loading="lazy"/>
+      <div class="hcap"><p style="font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;font-weight:700">Zeeland · Backsplash Update</p></div>
+    </div>
+  </div>
+  <div style="padding:24px 40px 0;max-width:1300px;margin:0 auto">
+    <p style="font-size:.62rem;letter-spacing:.1em;color:rgba(255,255,255,.18);font-weight:500">← Drag or use arrows →</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     ABOUT
+═══════════════════════════════════ -->
+<section id="about" style="padding:100px 0;background:var(--snow);border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr)">
+  <div style="max-width:1300px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center">
+    <div style="position:relative" class="rvl">
+      <div class="ir" style="aspect-ratio:4/5">
+        <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=900&q=85" alt="Ronne Home Solutions at work" loading="lazy"/>
+      </div>
+      <div style="position:absolute;top:-12px;left:-12px;width:52px;height:52px;border:2px solid var(--clay);pointer-events:none"></div>
+      <div style="position:absolute;bottom:-12px;right:-12px;width:52px;height:52px;border:2px solid var(--bdr);pointer-events:none"></div>
+    </div>
+    <div>
+      <div class="slbl rv">Our Story</div>
+      <h2 class="rv d1" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2.8rem,5vw,4.5rem);letter-spacing:.03em;line-height:.9;color:var(--ink);margin-bottom:20px">Built on Honesty.<br/>Driven by Craft.</h2>
+      <div style="width:44px;height:2px;background:var(--clay);margin-bottom:24px" class="rv d2"></div>
+      <p class="rv d2" style="font-size:.93rem;line-height:1.85;color:var(--ink2);font-weight:300;margin-bottom:18px">Ronne Home Solutions is a family-operated crew serving West Michigan homeowners since 2018. We built this company on one principle: do the work right, charge a fair price, and treat every home like it's our own.</p>
+      <p class="rv d3" style="font-size:.93rem;line-height:1.85;color:var(--ink2);font-weight:300;margin-bottom:40px">We don't upsell you on work you don't need. We clean up every day. We show up when we say we will. We love what we do — and you will too.</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:40px" class="rv d4">
+        <div style="padding:20px;border:1px solid var(--bdr)">
+          <div style="font-weight:600;font-size:.84rem;color:var(--ink);margin-bottom:4px">Licensed &amp; Insured</div>
+          <div style="font-size:.75rem;color:var(--dim);line-height:1.5">Fully covered on every job</div>
+        </div>
+        <div style="padding:20px;border:1px solid var(--bdr)">
+          <div style="font-weight:600;font-size:.84rem;color:var(--ink);margin-bottom:4px">Free Estimates</div>
+          <div style="font-size:.75rem;color:var(--dim);line-height:1.5">Honest quotes, no pressure</div>
+        </div>
+        <div style="padding:20px;border:1px solid var(--bdr)">
+          <div style="font-weight:600;font-size:.84rem;color:var(--ink);margin-bottom:4px">Clean Job Sites</div>
+          <div style="font-size:.75rem;color:var(--dim);line-height:1.5">We clean up every single day</div>
+        </div>
+        <div style="padding:20px;border:1px solid var(--bdr)">
+          <div style="font-weight:600;font-size:.84rem;color:var(--ink);margin-bottom:4px">Quality Materials</div>
+          <div style="font-size:.75rem;color:var(--dim);line-height:1.5">Sourced right for every job</div>
+        </div>
+      </div>
+      <div class="rv d5">
+        <a href="#contact" class="bc-dark mag"><span>Start Your Project</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     REVIEWS  (real testimonial text)
+═══════════════════════════════════ -->
+<section id="reviews" style="padding:100px 0;background:var(--cream)">
+  <div style="max-width:1300px;margin:0 auto;padding:0 40px">
+    <div style="margin-bottom:64px">
+      <div class="slbl rv">What People Say</div>
+      <h2 class="rv d1" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,6vw,5.2rem);letter-spacing:.03em;line-height:.9;color:var(--ink)">Reviews</h2>
+    </div>
+
+    <!-- Feature quote — real testimonial -->
+    <div style="border-left:3px solid var(--clay);padding-left:36px;margin-bottom:56px" class="rv">
+      <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.4rem,3vw,2.2rem);line-height:1.4;color:var(--ink);margin-bottom:24px">"Ronne Home Solutions has done a great job over the last year with various things that needed to be done around my house. He did quality work, came on‑time, was courteous and quick. He took the time to show me the completed work to verify that I was happy with his quality and did everything that I asked him to do. I recommend him for any work around your home — and you will know that it will be done well and on‑time."</p>
+      <div style="display:flex;align-items:center;gap:14px">
+        <div>
+          <div style="font-weight:600;font-size:.85rem;color:var(--ink)">Verified Customer</div>
+          <div style="font-size:.7rem;color:var(--dim);margin-top:2px">West Michigan · via Google</div>
+        </div>
+        <div style="display:flex;gap:3px;margin-left:4px">
+          <svg width="13" height="13" viewBox="0 0 20 20" fill="var(--clay)"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg width="13" height="13" viewBox="0 0 20 20" fill="var(--clay)"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg width="13" height="13" viewBox="0 0 20 20" fill="var(--clay)"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg width="13" height="13" viewBox="0 0 20 20" fill="var(--clay)"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg width="13" height="13" viewBox="0 0 20 20" fill="var(--clay)"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+      <div class="tc rv">
+        <p style="font-size:.88rem;line-height:1.8;color:var(--ink2);font-weight:300;margin-bottom:22px">"Ronne did my kitchen backsplash and bathroom floor. Came when they said they would, cleaned up every day, and the tile work is perfect. The price was more than fair."</p>
+        <div style="font-weight:600;font-size:.8rem;color:var(--ink)">Dave T. — Holland, MI</div>
+        <div style="font-size:.68rem;color:var(--dim);margin-top:2px">via Google</div>
+      </div>
+      <div class="tc rv d1" style="background:var(--ink);border-color:var(--ink)">
+        <p style="font-size:.88rem;line-height:1.8;color:rgba(255,255,255,.6);font-weight:300;margin-bottom:22px">"Had them do hardwood floors throughout the main level and floating shelves in the living room. Every detail was spot on. Crew was polite, on time, and genuinely cared about getting it right."</p>
+        <div style="font-weight:600;font-size:.8rem;color:#fff">Sarah M. — Rockford, MI</div>
+        <div style="font-size:.68rem;color:rgba(255,255,255,.3);margin-top:2px">via Google</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     CTA
+═══════════════════════════════════ -->
+<section style="padding:120px 40px;background:var(--ink);position:relative;overflow:hidden;text-align:center">
+  <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.023) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.023) 1px,transparent 1px);background-size:64px 64px;pointer-events:none"></div>
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,rgba(181,98,44,.14) 0%,transparent 60%);pointer-events:none"></div>
+  <div style="position:relative;z-index:5;max-width:800px;margin:0 auto">
+    <div class="rv" style="font-size:.6rem;letter-spacing:.26em;font-weight:700;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:20px">Ready to Start?</div>
+    <h2 class="rv d1" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,10vw,9rem);letter-spacing:.03em;line-height:.88;color:#fff;margin-bottom:28px">
+      LET'S BUILD<br/>SOMETHING<br/><span style="color:var(--clay)">GREAT</span>
+    </h2>
+    <p class="rv d2" style="font-size:.95rem;color:rgba(255,255,255,.38);line-height:1.7;max-width:380px;margin:0 auto 44px;font-weight:300">Free estimates, honest pricing, real craftsmanship.</p>
+    <div class="rv d3" style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center">
+      <a href="#contact" class="bc mag"><span>Get Your Free Estimate</span></a>
+      <a href="tel:+16168559812" class="bg">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.64A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        (616) 855-9812
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     CONTACT
+═══════════════════════════════════ -->
+<section id="contact" style="padding:100px 0;background:var(--cream2)">
+  <div style="max-width:1300px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start">
+    <div>
+      <div class="slbl rv">Get In Touch</div>
+      <h2 class="rv d1" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,5vw,4.2rem);letter-spacing:.03em;line-height:.9;color:var(--ink);margin-bottom:20px">Start Your<br/>Project Today</h2>
+      <p class="rv d2" style="font-size:.9rem;line-height:1.8;color:var(--ink2);font-weight:300;max-width:360px;margin-bottom:44px">Fill out the form or reach out directly — we get back to you the same day.</p>
+
+      <div class="rv d3" style="display:flex;flex-direction:column;gap:20px">
+        <a href="tel:+16168559812" style="display:flex;align-items:center;gap:16px;text-decoration:none">
+          <div class="ci-icon" style="width:46px;height:46px;border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .22s,border-color .22s">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--clay)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.64A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          </div>
+          <div>
+            <div style="font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);font-weight:600;margin-bottom:2px">Phone</div>
+            <div style="font-weight:600;color:var(--ink);font-size:.92rem">(616) 855-9812</div>
+          </div>
+        </a>
+        <a href="mailto:ronnehomesolutions@gmail.com" style="display:flex;align-items:center;gap:16px;text-decoration:none">
+          <div class="ci-icon" style="width:46px;height:46px;border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .22s,border-color .22s">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--clay)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div>
+            <div style="font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);font-weight:600;margin-bottom:2px">Email</div>
+            <div style="font-weight:600;color:var(--ink);font-size:.88rem;word-break:break-all">ronnehomesolutions@gmail.com</div>
+          </div>
+        </a>
+        <div style="display:flex;align-items:flex-start;gap:16px">
+          <div style="width:46px;height:46px;border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--clay)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <div style="font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);font-weight:600;margin-bottom:2px">Service Area</div>
+            <div style="font-size:.85rem;color:var(--ink2);line-height:1.75">Holland · Grand Rapids · Zeeland<br/>Hudsonville · Grandville · Rockford<br/>Byron Center &amp; surrounding areas</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rvr">
+      <form id="cf" onsubmit="handleSubmit(event)" novalidate style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="fw"><input type="text" id="fn" name="fn" class="fi" placeholder="First Name" required autocomplete="given-name"/><label for="fn" class="fl">First Name</label></div>
+          <div class="fw"><input type="text" id="ln" name="ln" class="fi" placeholder="Last Name" required autocomplete="family-name"/><label for="ln" class="fl">Last Name</label></div>
+        </div>
+        <div class="fw"><input type="email" id="em" name="em" class="fi" placeholder="Email" required autocomplete="email"/><label for="em" class="fl">Email Address</label></div>
+        <div class="fw"><input type="tel" id="ph" name="ph" class="fi" placeholder="Phone" autocomplete="tel"/><label for="ph" class="fl">Phone Number</label></div>
+        <div class="fw">
+          <select id="sv" name="sv" class="fi">
+            <option value="" disabled selected></option>
+            <option>Kitchen Remodeling</option><option>Bathroom Renovation</option>
+            <option>Flooring Installation</option><option>Basement Finishing</option>
+            <option>Interior Painting</option><option>Drywall &amp; Patching</option>
+            <option>Trim &amp; Doors</option><option>General Repairs</option><option>Other</option>
+          </select>
+          <label for="sv" class="fl" style="transform:translateY(-9px) scale(.78);color:var(--clay)">Service Needed</label>
+        </div>
+        <div class="fw"><textarea id="msg" name="msg" class="fi" placeholder="Tell us about your project…" rows="4"></textarea><label for="msg" class="fl">Project Details</label></div>
+        <button type="submit" class="bc mag" style="justify-content:center;padding:15px">
+          <span>Send Message</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="position:relative;z-index:1"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <p style="font-size:.66rem;color:var(--dim);text-align:center">We typically respond within a few hours on business days.</p>
+        <div id="fok" style="display:none;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.3);padding:14px;text-align:center;font-size:.82rem;color:#16a34a;font-weight:500">Message sent! We'll be in touch shortly.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     FOOTER
+═══════════════════════════════════ -->
+<footer style="background:var(--ink);padding:60px 40px 28px;border-top:1px solid rgba(255,255,255,.04)">
+  <div style="max-width:1300px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid rgba(255,255,255,.05)">
+      <div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+          <svg width="36" height="30" viewBox="0 0 104 88" fill="none">
+            <polygon points="4,80 34,8 64,80" stroke="#B5622C" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <polygon points="40,80 70,8 100,80" stroke="#B5622C" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div>
+            <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:.14em;font-size:.95rem;color:#fff;line-height:1">RONNE HOME SOLUTIONS, LLC</div>
+            <div style="font-size:.44rem;letter-spacing:.22em;color:rgba(255,255,255,.2);font-weight:600;text-transform:uppercase">Licensed &amp; Insured · West Michigan</div>
+          </div>
+        </div>
+        <p style="font-size:.8rem;line-height:1.8;color:rgba(255,255,255,.3);max-width:260px;font-weight:300">Honest, affordable home improvement. Family-operated since 2018.</p>
+      </div>
+      <div>
+        <div style="font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.18);font-weight:600;margin-bottom:14px">Navigate</div>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <a href="#services" class="nl" style="color:rgba(255,255,255,.4);font-size:.78rem">Services</a>
+          <a href="#work"     class="nl" style="color:rgba(255,255,255,.4);font-size:.78rem">Our Work</a>
+          <a href="#about"    class="nl" style="color:rgba(255,255,255,.4);font-size:.78rem">About</a>
+          <a href="#reviews"  class="nl" style="color:rgba(255,255,255,.4);font-size:.78rem">Reviews</a>
+          <a href="#contact"  class="nl" style="color:rgba(255,255,255,.4);font-size:.78rem">Contact</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.18);font-weight:600;margin-bottom:14px">Contact</div>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <a href="tel:+16168559812" style="color:rgba(255,255,255,.4);font-size:.78rem;text-decoration:none;transition:color .2s" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='rgba(255,255,255,.4)'">(616) 855-9812</a>
+          <a href="mailto:ronnehomesolutions@gmail.com" style="color:rgba(255,255,255,.4);font-size:.78rem;text-decoration:none;transition:color .2s;word-break:break-all" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='rgba(255,255,255,.4)'">ronnehomesolutions@gmail.com</a>
+          <div style="color:rgba(255,255,255,.25);font-size:.76rem;line-height:1.7;margin-top:4px">Holland · Grand Rapids<br/>Zeeland · Grandville<br/>Rockford · Byron Center</div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+      <p style="font-size:.62rem;color:rgba(255,255,255,.15)">&copy; 2025 Ronne Home Solutions, LLC. All rights reserved.</p>
+      <p style="font-size:.62rem;color:rgba(255,255,255,.15)">West Michigan · Licensed &amp; Insured</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── PROGRESS ── */
+window.addEventListener('scroll',()=>{ document.getElementById('pgbar').style.width=(scrollY/(document.documentElement.scrollHeight-innerHeight)*100).toFixed(1)+'%'; },{passive:true});
+
+/* ── NAVBAR (dark over hero, light after) ── */
+const nav=document.getElementById('nav');
+const navLinks=document.querySelectorAll('#nav-links .nl');
+const logoTxt=document.getElementById('logo-txt');
+function updateNav(){
+  const onHero=scrollY < (window.innerHeight-80);
+  nav.classList.toggle('dark',onHero);
+  nav.classList.toggle('light',!onHero);
+  navLinks.forEach(l=>l.style.color=onHero?'rgba(255,255,255,.7)':'var(--ink2)');
+  if(logoTxt){
+    logoTxt.children[0].style.color=onHero?'#fff':'var(--ink)';
+    logoTxt.children[1].style.color=onHero?'rgba(255,255,255,.38)':'var(--dim)';
+  }
+}
+window.addEventListener('scroll',updateNav,{passive:true});
+updateNav();
+
+/* ── MOBILE MENU ── */
+const mob=document.getElementById('mob');
+let mo=false;
+document.getElementById('mbt').addEventListener('click',()=>{ mo=!mo; mob.classList.toggle('open',mo); document.getElementById('mbt').setAttribute('aria-expanded',mo); });
+function cm(){ mo=false; mob.classList.remove('open'); document.getElementById('mbt').setAttribute('aria-expanded','false'); }
+
+/* ── HERO PARALLAX ── */
+window.addEventListener('scroll',()=>{ const img=document.getElementById('hero-img'); if(img&&scrollY<innerHeight*1.2)img.style.objectPosition=`center ${scrollY*.08}px`; },{passive:true});
+
+/* ── SCROLL REVEAL ── */
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); obs.unobserve(e.target); } });
+},{threshold:0.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.rv,.rvl,.rvr,.rvs,.cl').forEach(el=>obs.observe(el));
+
+const iobs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); iobs.unobserve(e.target); } });
+},{threshold:0.04});
+document.querySelectorAll('.ir').forEach(el=>iobs.observe(el));
+
+/* ── MAGNETIC BUTTONS ── */
+document.querySelectorAll('.mag').forEach(btn=>{
+  btn.addEventListener('mousemove',e=>{
+    const r=btn.getBoundingClientRect();
+    const x=(e.clientX-(r.left+r.width/2))*.28;
+    const y=(e.clientY-(r.top+r.height/2))*.28;
+    btn.style.transform=`translate(${x}px,${y}px)`;
+  });
+  btn.addEventListener('mouseleave',()=>{ btn.style.transform=''; });
+});
+
+/* ── CONTACT ICON HOVER ── */
+document.querySelectorAll('.ci-icon').forEach(icon=>{
+  const svg=icon.querySelector('svg');
+  icon.parentElement.addEventListener('mouseenter',()=>{ icon.style.background='var(--clay)'; icon.style.borderColor='var(--clay)'; if(svg)svg.setAttribute('stroke','white'); });
+  icon.parentElement.addEventListener('mouseleave',()=>{ icon.style.background=''; icon.style.borderColor='var(--bdr)'; if(svg)svg.setAttribute('stroke','var(--clay)'); });
+});
+
+/* ── BEFORE/AFTER ── */
+document.querySelectorAll('[data-ba]').forEach(wrap=>{
+  const after=wrap.querySelector('.ba-after'),line=wrap.querySelector('.ba-line'),btn=wrap.querySelector('.ba-btn');
+  let drag=false;
+  const pos=e=>Math.max(2,Math.min(98,((e.touches?e.touches[0].clientX:e.clientX)-wrap.getBoundingClientRect().left)/wrap.offsetWidth*100));
+  const set=p=>{ after.style.clipPath=`inset(0 ${(100-p).toFixed(1)}% 0 0)`; line.style.left=p+'%'; btn.style.left=p+'%'; };
+  wrap.addEventListener('mousedown',e=>{drag=true;set(pos(e));});
+  window.addEventListener('mouseup',()=>drag=false);
+  window.addEventListener('mousemove',e=>{if(drag)set(pos(e));});
+  wrap.addEventListener('touchstart',e=>{drag=true;set(pos(e));},{passive:true});
+  window.addEventListener('touchend',()=>drag=false);
+  window.addEventListener('touchmove',e=>{if(drag)set(pos(e));},{passive:true});
+});
+
+/* ── GALLERY SCROLL BUTTONS ── */
+const track=document.getElementById('sgtrack');
+document.getElementById('sgprev').addEventListener('click',()=>track.scrollBy({left:-420,behavior:'smooth'}));
+document.getElementById('sgnext').addEventListener('click',()=>track.scrollBy({left:420,behavior:'smooth'}));
+
+/* ── FORM ── */
+function handleSubmit(e){
+  e.preventDefault();
+  const btn=e.target.querySelector('button[type="submit"]');
+  btn.disabled=true; btn.querySelector('span').textContent='Sending…';
+  setTimeout(()=>{ btn.style.display='none'; document.getElementById('fok').style.display='block'; e.target.reset(); },900);
+}
+</script>
+</body>
+</html>

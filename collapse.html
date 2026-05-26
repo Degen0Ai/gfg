@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>COLLAPSE</title>
+<link href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#08061A;cursor:none}
+
+/* CRT scanlines */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background:repeating-linear-gradient(
+    0deg,transparent,transparent 3px,
+    rgba(0,0,0,.07) 3px,rgba(0,0,0,.07) 4px
+  );
+  pointer-events:none;z-index:400;
+}
+/* Vignette */
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  background:radial-gradient(ellipse 90% 90% at 50% 50%,transparent 55%,rgba(2,0,15,.75) 100%);
+  pointer-events:none;z-index:401;
+}
+
+#bloom{
+  position:fixed;inset:0;z-index:10;
+  filter:blur(20px);opacity:.55;
+  mix-blend-mode:screen;pointer-events:none;
+}
+#c{position:fixed;inset:0;z-index:11}
+
+/* Flash overlay for big chains */
+#flash{
+  position:fixed;inset:0;z-index:350;
+  pointer-events:none;opacity:0;
+  transition:opacity .08s;
+}
+
+/* Custom cursor */
+#cur-dot{
+  position:fixed;width:7px;height:7px;
+  background:#fff;border-radius:50%;
+  transform:translate(-50%,-50%);
+  pointer-events:none;z-index:500;
+  mix-blend-mode:difference;
+}
+#cur-ring{
+  position:fixed;width:30px;height:30px;
+  border:1px solid rgba(255,255,255,.3);border-radius:50%;
+  transform:translate(-50%,-50%);
+  pointer-events:none;z-index:499;
+  transition:width .18s ease,height .18s ease,border-color .18s;
+}
+
+/* UI */
+#ui{position:fixed;inset:0;z-index:300;pointer-events:none;font-family:'Righteous',sans-serif}
+
+#score-area{
+  position:absolute;top:36px;left:50%;transform:translateX(-50%);
+  text-align:center;
+}
+#score{
+  font-size:clamp(52px,9vw,88px);
+  color:#fff;letter-spacing:.04em;line-height:1;
+  text-shadow:0 0 25px rgba(124,58,237,.9),0 0 70px rgba(124,58,237,.4);
+  transition:transform .08s;
+}
+#score.pop{transform:scale(1.14) translateY(-4px)}
+
+#meta{
+  display:flex;align-items:center;justify-content:center;
+  gap:14px;margin-top:8px;
+}
+#combo-label{
+  font-size:13px;letter-spacing:.3em;
+  color:rgba(255,255,255,.4);transition:color .3s,text-shadow .3s;
+}
+#combo-label.fire{
+  color:#F43F5E;
+  text-shadow:0 0 14px rgba(244,63,94,.7);
+}
+#chain-label{
+  font-size:12px;letter-spacing:.22em;
+  color:rgba(255,255,255,.2);
+}
+
+#wave-badge{
+  position:absolute;top:36px;right:44px;
+  font-size:11px;letter-spacing:.35em;
+  color:rgba(255,255,255,.25);
+}
+
+#hint{
+  position:absolute;bottom:38px;left:50%;transform:translateX(-50%);
+  font-family:'Poppins',sans-serif;font-size:11px;
+  letter-spacing:.25em;color:rgba(255,255,255,.18);
+  white-space:nowrap;transition:opacity 1.2s;
+}
+
+/* Big announcement */
+#announce{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;pointer-events:none;
+  opacity:0;transition:opacity .4s;
+}
+#announce.show{opacity:1}
+#ann-title{
+  font-size:clamp(56px,13vw,130px);
+  letter-spacing:.18em;
+  -webkit-text-stroke:1.5px rgba(255,255,255,.5);
+  color:transparent;
+  text-shadow:0 0 50px rgba(124,58,237,.6),0 0 120px rgba(124,58,237,.3);
+  line-height:1;
+}
+#ann-sub{
+  font-family:'Poppins',sans-serif;
+  font-size:13px;letter-spacing:.45em;
+  color:rgba(255,255,255,.35);
+  margin-top:12px;
+}
+
+/* Orb count bar */
+#color-bar{
+  position:absolute;bottom:38px;right:44px;
+  display:flex;gap:6px;align-items:center;
+}
+.color-pip{
+  width:8px;height:8px;border-radius:50%;
+  transition:transform .3s,opacity .3s;
+}
+
+/* Screen shake */
+@keyframes quake{
+  0%  {transform:translate(0,0) rotate(0)}
+  15% {transform:translate(-5px,3px) rotate(-.3deg)}
+  30% {transform:translate(4px,-4px) rotate(.2deg)}
+  50% {transform:translate(-3px,4px) rotate(-.2deg)}
+  70% {transform:translate(3px,-2px) rotate(.15deg)}
+  100%{transform:translate(0,0) rotate(0)}
+}
+body.shake{animation:quake .28s ease-out}
+</style>
+</head>
+<body>
+
+<canvas id="bloom"></canvas>
+<canvas id="c"></canvas>
+<div id="flash"></div>
+<div id="cur-dot"></div>
+<div id="cur-ring"></div>
+
+<div id="ui">
+  <div id="score-area">
+    <div id="score">0</div>
+    <div id="meta">
+      <div id="combo-label">COMBO 1.0x</div>
+      <div id="chain-label"></div>
+    </div>
+  </div>
+  <div id="wave-badge">WAVE 1</div>
+  <div id="hint">Click an orb to begin the chain reaction</div>
+  <div id="color-bar"></div>
+  <div id="announce">
+    <div id="ann-title">COLLAPSE</div>
+    <div id="ann-sub">CLICK ANY ORB TO BEGIN</div>
+  </div>
+</div>
+
+<script>
+'use strict';
+// ═══════════════════════════════════════════════════════════════
+// COLLAPSE  —  Chain-Reaction Arcade
+// ═══════════════════════════════════════════════════════════════
+
+const canvas = document.getElementById('c');
+const bcanv  = document.getElementById('bloom');
+const ctx    = canvas.getContext('2d');
+const bctx   = bcanv.getContext('2d');
+let W, H;
+
+function resize(){
+  W = canvas.width = bcanv.width  = window.innerWidth;
+  H = canvas.height= bcanv.height = window.innerHeight;
+  initStars();
+}
+window.addEventListener('resize', resize);
+
+// ── Palette ───────────────────────────────────────────────────
+const PAL = [
+  {r:0,   g:232, b:255, f:262},   // Cyan   / C4
+  {r:244, g:63,  b:94,  f:330},   // Rose   / E4
+  {r:160, g:100, b:255, f:392},   // Violet / G4
+  {r:0,   g:255, b:130, f:440},   // Lime   / A4
+  {r:255, g:205, b:0,   f:523},   // Gold   / C5
+];
+const NUM_COLORS = PAL.length;
+const rc = (p,a=1)=>`rgba(${p.r},${p.g},${p.b},${a})`;
+
+// ── Game State ────────────────────────────────────────────────
+const ORB_COUNT     = 125;
+const TRIG_R        = 108;
+const TRIG_R2       = TRIG_R*TRIG_R;
+const EDGE          = 70;
+
+let orbs     = [];
+let parts    = [];
+let arcs     = [];
+let ripples  = [];
+let stars    = [];
+
+let score        = 0;
+let scoreDisp    = 0;
+let combo        = 1;
+let comboTimer   = null;
+let chainActive  = 0;    // currently in-flight orbs
+let chainTotal   = 0;    // cumulative orbs in ongoing streak
+let waveNum      = 1;
+let transitioning= false;
+let hinted       = false;
+let frameN       = 0;
+
+// ── Stars ─────────────────────────────────────────────────────
+function initStars(){
+  stars = Array.from({length:280},()=>({
+    x:Math.random()*W, y:Math.random()*H,
+    r:.4+Math.random()*1.4,
+    a:.08+Math.random()*.45,
+    ph:Math.random()*Math.PI*2,
+    sp:.015+Math.random()*.04,
+  }));
+}
+
+// ── Orb ───────────────────────────────────────────────────────
+class Orb {
+  constructor(x,y,ci){
+    this.x   = x;
+    this.y   = y;
+    this.vx  = (Math.random()-.5)*.5;
+    this.vy  = (Math.random()-.5)*.5;
+    this.ci  = ci;            // color index
+    this.r   = 13+Math.random()*6;
+    this.st  = 'idle';        // idle|charging|dead
+    this.ch  = 0;             // charge 0→1
+    this.ph  = Math.random()*Math.PI*2;  // pulse phase
+    this.alp = 0;             // fade-in
+  }
+
+  update(dt){
+    this.alp = Math.min(1, this.alp + dt*1.8);
+    this.ph += dt*1.8;
+
+    if(this.st==='idle'){
+      this.vx += (Math.random()-.5)*.008;
+      this.vy += (Math.random()-.5)*.008;
+      this.vx *= .982;
+      this.vy *= .982;
+      this.x  += this.vx;
+      this.y  += this.vy;
+      if(this.x<EDGE)     this.vx+=.08;
+      if(this.x>W-EDGE)   this.vx-=.08;
+      if(this.y<EDGE)     this.vy+=.08;
+      if(this.y>H-EDGE)   this.vy-=.08;
+    }
+    if(this.st==='charging'){
+      this.ch = Math.min(1, this.ch + dt*2.2);
+      if(this.ch>=1) this._detonate();
+    }
+  }
+
+  trigger(delay=0){
+    if(this.st!=='idle') return;
+    this.st='charging'; this.ch=0;
+    chainActive++; chainTotal++;
+
+    if(!hinted){
+      hinted=true;
+      document.getElementById('hint').style.opacity='0';
+    }
+
+    playPing(PAL[this.ci], delay*.0005);
+
+    // Cascade to nearby same-color orbs
+    orbs.forEach(o=>{
+      if(o===this || o.st!=='idle' || o.ci!==this.ci) return;
+      const dx=o.x-this.x, dy=o.y-this.y;
+      const d2=dx*dx+dy*dy;
+      if(d2<TRIG_R2){
+        const d=Math.sqrt(d2);
+        const pd=delay + d*1.9;
+        setTimeout(()=>o.trigger(pd), pd);
+        setTimeout(()=> arcs.push({
+          x1:this.x,y1:this.y,x2:o.x,y2:o.y,
+          ci:this.ci, a:1
+        }), Math.min(pd*.25,60));
+      }
+    });
+  }
+
+  _detonate(){
+    this.st='dead';
+    chainActive--;
+
+    // Points
+    const pts = Math.round((10 + chainTotal*2) * combo);
+    score += pts;
+    updateScoreUI();
+
+    // Combo
+    clearTimeout(comboTimer);
+    combo = Math.min(8, 1 + Math.floor(chainTotal/5)*.5);
+    comboTimer = setTimeout(resetCombo, 2500);
+    updateComboUI();
+
+    // Particles
+    const pal=PAL[this.ci];
+    for(let i=0;i<30;i++){
+      const a=Math.random()*Math.PI*2;
+      const s=1.5+Math.random()*5;
+      parts.push({
+        x:this.x,y:this.y,
+        vx:Math.cos(a)*s, vy:Math.sin(a)*s,
+        ci:this.ci, a:1,
+        sz:2+Math.random()*4,
+        dc:.011+Math.random()*.013
+      });
+    }
+
+    // Shockwave ring
+    ripples.push({x:this.x,y:this.y,r:0,ci:this.ci,a:.8});
+
+    // Screen effects for big chains
+    if(chainTotal>8){
+      shakeScreen();
+      if(chainTotal>15) screenFlash(PAL[this.ci]);
+    }
+
+    updateColorBar();
+    checkWave();
+  }
+
+  draw(){
+    if(this.st==='dead') return;
+    const pal=PAL[this.ci];
+    const pulse=Math.sin(this.ph)*.28+.82;
+
+    ctx.save();  bctx.save();
+    ctx.globalAlpha=this.alp;
+    bctx.globalAlpha=this.alp;
+
+    if(this.st==='idle'){
+      const gr=this.r*(2.2+pulse*.6);
+
+      // Bloom layer (just solid, CSS blur handles glow)
+      bctx.fillStyle=rc(pal,.65);
+      bctx.beginPath();
+      bctx.arc(this.x,this.y,gr,0,Math.PI*2);
+      bctx.fill();
+
+      // Main glow ring
+      const g=ctx.createRadialGradient(this.x,this.y,this.r*.3,this.x,this.y,gr);
+      g.addColorStop(0,rc(pal,.55));
+      g.addColorStop(.6,rc(pal,.12));
+      g.addColorStop(1,rc(pal,0));
+      ctx.fillStyle=g;
+      ctx.beginPath(); ctx.arc(this.x,this.y,gr,0,Math.PI*2); ctx.fill();
+
+      // Orb body
+      ctx.fillStyle=rc(pal,.88*pulse);
+      ctx.beginPath(); ctx.arc(this.x,this.y,this.r*pulse,0,Math.PI*2); ctx.fill();
+
+      // Specular
+      ctx.fillStyle='rgba(255,255,255,.75)';
+      ctx.beginPath(); ctx.arc(this.x-this.r*.28,this.y-this.r*.3,this.r*.28,0,Math.PI*2); ctx.fill();
+    }
+
+    if(this.st==='charging'){
+      const c=this.ch;
+      const vib=c*3;
+      const jx=(Math.random()-.5)*vib, jy=(Math.random()-.5)*vib;
+
+      // Expanding bloom
+      bctx.fillStyle=rc(pal,.8);
+      bctx.beginPath();
+      bctx.arc(this.x,this.y,this.r*5*c+this.r,0,Math.PI*2);
+      bctx.fill();
+
+      // Outer ring
+      ctx.save();
+      ctx.strokeStyle=rc(pal,1-c*.4);
+      ctx.lineWidth=2;
+      ctx.beginPath();
+      ctx.arc(this.x+jx,this.y+jy,this.r*(1+c*2.5),0,Math.PI*2);
+      ctx.stroke();
+      ctx.restore();
+
+      // Second ring
+      ctx.save();
+      ctx.strokeStyle=rc(pal,(1-c)*.5);
+      ctx.lineWidth=1;
+      ctx.beginPath();
+      ctx.arc(this.x,this.y,this.r*(1+c*4),0,Math.PI*2);
+      ctx.stroke();
+      ctx.restore();
+
+      // Core → white hot
+      const tr=pal.r+(255-pal.r)*c, tg=pal.g+(255-pal.g)*c, tb=pal.b+(255-pal.b)*c;
+      ctx.fillStyle=`rgba(${tr|0},${tg|0},${tb|0},1)`;
+      ctx.beginPath();
+      ctx.arc(this.x+jx,this.y+jy,this.r*(1+c*.4),0,Math.PI*2);
+      ctx.fill();
+
+      // Specular flash
+      ctx.fillStyle=`rgba(255,255,255,${c*.9})`;
+      ctx.beginPath();
+      ctx.arc(this.x+jx,this.y+jy,this.r*.55,0,Math.PI*2);
+      ctx.fill();
+    }
+
+    ctx.restore(); bctx.restore();
+  }
+
+  hit(mx,my){
+    if(this.st!=='idle') return false;
+    const dx=mx-this.x, dy=my-this.y;
+    return dx*dx+dy*dy<(this.r+12)*(this.r+12);
+  }
+}
+
+// ── Spawn Orbs ────────────────────────────────────────────────
+function spawnOrbs(wave){
+  orbs=[]; parts=[]; arcs=[]; ripples=[];
+  chainActive=0;
+
+  const spread = 100 + wave*18;
+  const perColor = Math.ceil(ORB_COUNT/NUM_COLORS);
+
+  for(let ci=0;ci<NUM_COLORS;ci++){
+    const cx=EDGE+Math.random()*(W-EDGE*2);
+    const cy=EDGE+Math.random()*(H-EDGE*2);
+    for(let j=0;j<perColor;j++){
+      const a=Math.random()*Math.PI*2;
+      const r=Math.random()*spread;
+      orbs.push(new Orb(
+        Math.max(EDGE,Math.min(W-EDGE, cx+Math.cos(a)*r)),
+        Math.max(EDGE,Math.min(H-EDGE, cy+Math.sin(a)*r)),
+        ci
+      ));
+    }
+  }
+  updateColorBar();
+}
+
+// ── Wave / Score ──────────────────────────────────────────────
+function checkWave(){
+  if(transitioning) return;
+  if(orbs.every(o=>o.st==='dead')){
+    transitioning=true;
+    setTimeout(()=>{
+      waveNum++;
+      score += waveNum*800;
+      updateScoreUI();
+      announce('WAVE '+waveNum,'CHAIN REACTION ONLINE');
+      document.getElementById('wave-badge').textContent='WAVE '+waveNum;
+      setTimeout(()=>{
+        spawnOrbs(waveNum);
+        transitioning=false;
+      },1800);
+    },1200);
+  }
+}
+
+function resetCombo(){
+  combo=1; chainTotal=0;
+  updateComboUI();
+}
+
+function updateScoreUI(){
+  const el=document.getElementById('score');
+  el.classList.remove('pop');
+  void el.offsetWidth;
+  el.classList.add('pop');
+  setTimeout(()=>el.classList.remove('pop'),120);
+}
+
+function updateComboUI(){
+  const cl=document.getElementById('combo-label');
+  cl.textContent=`COMBO ${combo.toFixed(1)}x`;
+  cl.classList.toggle('fire', combo>=2.5);
+  const ch=document.getElementById('chain-label');
+  ch.textContent=chainTotal>0?`· ${chainTotal} CHAIN`:'';
+}
+
+function updateColorBar(){
+  const bar=document.getElementById('color-bar');
+  bar.innerHTML='';
+  PAL.forEach((p,ci)=>{
+    const rem=orbs.filter(o=>o.ci===ci&&o.st!=='dead').length;
+    const pip=document.createElement('div');
+    pip.className='color-pip';
+    pip.style.background=`rgb(${p.r},${p.g},${p.b})`;
+    pip.style.opacity=rem>0?'0.7':'0.15';
+    pip.style.transform=rem>0?'scale(1)':'scale(0.6)';
+    pip.style.boxShadow=rem>0?`0 0 6px rgb(${p.r},${p.g},${p.b})`:'none';
+    bar.appendChild(pip);
+  });
+}
+
+// ── Announce ──────────────────────────────────────────────────
+function announce(title,sub){
+  const el=document.getElementById('announce');
+  document.getElementById('ann-title').textContent=title;
+  document.getElementById('ann-sub').textContent=sub;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),1600);
+}
+
+// ── FX ────────────────────────────────────────────────────────
+function shakeScreen(){
+  document.body.classList.remove('shake');
+  void document.body.offsetWidth;
+  document.body.classList.add('shake');
+}
+
+function screenFlash(pal){
+  const f=document.getElementById('flash');
+  f.style.background=`radial-gradient(circle at 50% 50%, rgba(${pal.r},${pal.g},${pal.b},.22) 0%, transparent 70%)`;
+  f.style.opacity='1';
+  setTimeout(()=>f.style.opacity='0',120);
+}
+
+// ── Draw Arcs ─────────────────────────────────────────────────
+function drawArc(arc){
+  const pal=PAL[arc.ci];
+  const segs=8;
+  const ddx=(arc.x2-arc.x1)/segs;
+  const ddy=(arc.y2-arc.y1)/segs;
+  const dlen=Math.sqrt(ddx*ddx+ddy*ddy)||1;
+  const nx=-ddy/dlen, ny=ddx/dlen;
+
+  ctx.save();
+  ctx.globalAlpha=arc.a;
+  ctx.strokeStyle=rc(pal,1);
+  ctx.lineWidth=1.5;
+  ctx.shadowBlur=10; ctx.shadowColor=rc(pal,.9);
+  ctx.beginPath();
+  ctx.moveTo(arc.x1,arc.y1);
+  for(let i=1;i<segs;i++){
+    const t=i/segs;
+    const jitter=(Math.random()-.5)*14*(1-Math.abs(t-.5)*1.8);
+    ctx.lineTo(arc.x1+ddx*i+nx*jitter, arc.y1+ddy*i+ny*jitter);
+  }
+  ctx.lineTo(arc.x2,arc.y2);
+  ctx.stroke();
+  ctx.restore();
+}
+
+// ── Main Loop ─────────────────────────────────────────────────
+let lastTs=0;
+let T=0;
+
+function frame(ts){
+  const dt=Math.min((ts-lastTs)/16.67,3);
+  lastTs=ts; T=ts*.001; frameN++;
+
+  // Lerp score display
+  scoreDisp+=(score-scoreDisp)*.14;
+  document.getElementById('score').firstChild.nodeValue='';
+  document.getElementById('score').textContent=Math.round(scoreDisp).toLocaleString();
+
+  // Clear both canvases
+  ctx.clearRect(0,0,W,H);
+  bctx.clearRect(0,0,W,H);
+
+  // Background
+  const bg=ctx.createRadialGradient(W*.5,H*.45,0,W*.5,H*.5,Math.max(W,H)*.75);
+  bg.addColorStop(0,'#1C1040');
+  bg.addColorStop(.5,'#0E0C28');
+  bg.addColorStop(1,'#050312');
+  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+
+  // Stars
+  ctx.save();
+  stars.forEach(s=>{
+    const tw=Math.sin(T*s.sp+s.ph)*.25+.85;
+    ctx.globalAlpha=s.a*tw;
+    ctx.fillStyle='#fff';
+    ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill();
+  });
+  ctx.restore();
+
+  // Arcs
+  for(let i=arcs.length-1;i>=0;i--){
+    drawArc(arcs[i]);
+    arcs[i].a-=.04;
+    if(arcs[i].a<=0) arcs.splice(i,1);
+  }
+
+  // Ripple rings
+  for(let i=ripples.length-1;i>=0;i--){
+    const rp=ripples[i];
+    rp.r+=5; rp.a-=.035;
+    if(rp.a<=0){ripples.splice(i,1);continue;}
+    const pal=PAL[rp.ci];
+    ctx.save();
+    ctx.globalAlpha=rp.a;
+    ctx.strokeStyle=rc(pal,1);
+    ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.arc(rp.x,rp.y,rp.r,0,Math.PI*2); ctx.stroke();
+    ctx.restore();
+  }
+
+  // Orbs: idle behind, charging on top
+  orbs.forEach(o=>{ if(o.st==='idle') o.update(dt); });
+  orbs.forEach(o=>{ if(o.st==='charging') o.update(dt); });
+  orbs.forEach(o=>{ if(o.st==='idle') o.draw(); });
+  orbs.forEach(o=>{ if(o.st==='charging') o.draw(); });
+
+  // Particles
+  for(let i=parts.length-1;i>=0;i--){
+    const p=parts[i];
+    p.x+=p.vx; p.y+=p.vy;
+    p.vx*=.97; p.vy*=.97;
+    p.a-=p.dc;
+    if(p.a<=0){parts.splice(i,1);continue;}
+    const pal=PAL[p.ci];
+    ctx.save();
+    ctx.globalAlpha=p.a;
+    ctx.fillStyle=rc(pal,1);
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.sz,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+    bctx.save();
+    bctx.globalAlpha=p.a*.6;
+    bctx.fillStyle=rc(pal,1);
+    bctx.beginPath(); bctx.arc(p.x,p.y,p.sz*2.5,0,Math.PI*2); bctx.fill();
+    bctx.restore();
+  }
+
+  requestAnimationFrame(frame);
+}
+
+// ── Cursor ────────────────────────────────────────────────────
+const cdot  = document.getElementById('cur-dot');
+const cring = document.getElementById('cur-ring');
+let mx=W/2, my=H/2;
+
+window.addEventListener('mousemove', e=>{
+  mx=e.clientX; my=e.clientY;
+  cdot.style.left=mx+'px';  cdot.style.top=my+'px';
+  cring.style.left=mx+'px'; cring.style.top=my+'px';
+  const over=orbs.some(o=>o.hit(mx,my));
+  cring.style.width =over?'48px':'30px';
+  cring.style.height=over?'48px':'30px';
+  cring.style.borderColor=over?'rgba(255,255,255,.6)':'rgba(255,255,255,.3)';
+});
+
+window.addEventListener('click',e=>{
+  initAudio();
+  const hit=orbs.find(o=>o.hit(e.clientX,e.clientY));
+  if(hit){
+    hit.trigger();
+  } else {
+    // Miss ripple
+    ripples.push({x:e.clientX,y:e.clientY,r:0,ci:0,a:.25});
+  }
+});
+
+window.addEventListener('touchstart',e=>{
+  initAudio();
+  e.preventDefault();
+  const t=e.touches[0];
+  const hit=orbs.find(o=>o.hit(t.clientX,t.clientY));
+  if(hit) hit.trigger();
+},{passive:false});
+
+// ── Audio ─────────────────────────────────────────────────────
+let audioCtx=null;
+
+function initAudio(){
+  if(audioCtx) return;
+  audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+}
+
+function playPing(pal, offset=0){
+  if(!audioCtx) return;
+  const t0=audioCtx.currentTime+offset;
+  const osc=audioCtx.createOscillator();
+  const gain=audioCtx.createGain();
+  const filt=audioCtx.createBiquadFilter();
+  filt.type='bandpass';
+  filt.frequency.setValueAtTime(pal.f, t0);
+  filt.Q.setValueAtTime(3,t0);
+  osc.type='sine';
+  osc.frequency.setValueAtTime(pal.f,t0);
+  osc.frequency.exponentialRampToValueAtTime(pal.f*1.6,t0+.2);
+  gain.gain.setValueAtTime(0,t0);
+  gain.gain.linearRampToValueAtTime(.14,t0+.025);
+  gain.gain.exponentialRampToValueAtTime(.001,t0+.55);
+  osc.connect(filt); filt.connect(gain); gain.connect(audioCtx.destination);
+  osc.start(t0); osc.stop(t0+.6);
+}
+
+// ── Boot ──────────────────────────────────────────────────────
+resize();
+spawnOrbs(1);
+announce('COLLAPSE','CLICK ANY ORB TO BEGIN');
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
