@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WiFi CSI Telemetry Research Lab</title>
+  <meta name="description" content="WiFi CSI Telemetry Research Lab by Romando Wright using Kali Linux, Docker, ESP32 receivers, and RuView." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <nav>
+      <span class="brand">WiFi CSI Telemetry Research Lab</span>
+      <a href="https://github.com/mandozone/WiFi-DensePose-Through-Wall-Human-Detection">GitHub</a>
+    </nav>
+    <div class="hero-grid">
+      <section>
+        <p class="eyebrow">Wireless sensing lab · Romando Wright</p>
+        <h1>Through-wall human detection research using WiFi CSI.</h1>
+        <p class="lead">A hands-on lab for running the RuView CSI telemetry stack in Docker on Kali Linux, validating the local dashboard, and preparing ESP32 receivers for future CSI capture.</p>
+        <div class="badges">
+          <span>Simulation operational</span>
+          <span>Hardware in progress</span>
+          <span>Privacy-sensitive research</span>
+        </div>
+      </section>
+      <figure>
+        <img src="assets/dashboard-live.jpg" alt="WiFi CSI Telemetry Research Lab dashboard running locally" />
+        <figcaption>Local dashboard served at <code>localhost:3000/ui/index.html</code>.</figcaption>
+      </figure>
+    </div>
+  </header>
+
+  <main>
+    <section class="status cards">
+      <article><strong>Phase 1</strong><span>Complete</span><p>Kali VM, Docker image, backend, and dashboard running.</p></article>
+      <article><strong>Phase 2</strong><span>In progress</span><p>ESP32-S3 receivers ordered for multi-sensor CSI capture.</p></article>
+      <article><strong>Phase 3</strong><span>Pending</span><p>Firmware flashing, receiver placement, and hardware data flow.</p></article>
+      <article><strong>Phase 4</strong><span>Pending</span><p>Through-wall testing and room-specific calibration.</p></article>
+    </section>
+
+    <section>
+      <p class="eyebrow">What the lab demonstrates</p>
+      <h2>CSI-based sensing, not camera surveillance.</h2>
+      <p>WiFi CSI captures fine-grained channel changes such as amplitude and phase variation across subcarriers. Human motion can affect WiFi paths through absorption, reflection, diffraction, scattering, and multipath interference. This lab documents the infrastructure needed to run the sensing stack and prepare for controlled hardware testing.</p>
+      <div class="note"><strong>Honest status:</strong> the current build is operational in simulation mode. Hardware CSI capture, through-wall validation, heartbeat detection, and breathing-rate validation are not claimed as complete.</div>
+    </section>
+
+    <section>
+      <p class="eyebrow">Architecture</p>
+      <h2>Transmitter, receivers, and processing server.</h2>
+      <div class="arch">
+        <div>Alfa AWUS036AC<br><span>WiFi transmitter</span></div>
+        <div>ESP32-S2 / ESP32-S3<br><span>CSI receivers</span></div>
+        <div>Kali Linux VM<br><span>Docker runtime</span></div>
+        <div>RuView backend<br><span>Rust/Axum · 3000/3001/5005</span></div>
+      </div>
+    </section>
+
+    <section>
+      <p class="eyebrow">Evidence</p>
+      <h2>Build proof and screenshots.</h2>
+      <div class="gallery">
+        <figure><img src="assets/esp32-s3-hardware.jpg" alt="ESP32-S3 board" /><figcaption>ESP32-S3 receiver hardware selected for the next phase.</figcaption></figure>
+        <figure><img src="assets/docker-running.jpg" alt="Docker container running logs" /><figcaption>Docker container running the CSI telemetry sensing server.</figcaption></figure>
+        <figure><img src="assets/docker-compose-setup.jpg" alt="docker-compose setup output" /><figcaption>Docker-compose environment setup and service preparation.</figcaption></figure>
+        <figure><img src="assets/network-verification.jpg" alt="curl and ping network verification" /><figcaption>Network verification, packet tests, and Docker image download.</figcaption></figure>
+        <figure><img src="assets/sensing-heatmap.jpg" alt="WiFi CSI Telemetry Research Lab simulated sensing heatmap" /><figcaption>Simulation heatmap / sensing visualization.</figcaption></figure>
+        <figure><img src="assets/present-moving.jpg" alt="Present moving classification output" /><figcaption>Signal features and <code>PRESENT_MOVING</code> classification view.</figcaption></figure>
+      </div>
+    </section>
+
+    <section>
+      <p class="eyebrow">Troubleshooting</p>
+      <h2>What had to be fixed.</h2>
+      <table>
+        <tr><th>Issue</th><th>Fix</th></tr>
+        <tr><td>VirtualBox NAT DNS failure</td><td>Set resolver to <code>8.8.8.8</code>.</td></tr>
+        <tr><td><code>docker-compose</code> missing</td><td>Installed docker-compose on Kali.</td></tr>
+        <tr><td>Dashboard 404</td><td>Pulled a fresh Docker image with UI assets.</td></tr>
+        <tr><td>Broken multi-line command</td><td>Used a single-line Docker command / full block paste.</td></tr>
+      </table>
+    </section>
+
+    <section class="ethics">
+      <p class="eyebrow">Ethics</p>
+      <h2>Authorized lab use only.</h2>
+      <p>Through-wall sensing is privacy-sensitive. This project is documented as a controlled lab build and should only be tested where all participants understand and consent to the sensing setup.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>Built by Romando Wright · No cameras. No IR. Just WiFi CSI.</p>
+  </footer>
+</body>
+</html>
