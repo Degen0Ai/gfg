@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>NutriTrack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <!-- App Shell -->
+  <div id="app">
+
+    <!-- ===== DASHBOARD PAGE ===== -->
+    <div id="page-dashboard" class="page active">
+      <header class="page-header">
+        <div>
+          <p id="greeting" class="greeting">Good morning, Josh</p>
+          <h1 id="today-date" class="page-title">Today</h1>
+        </div>
+        <button class="avatar-btn" aria-label="Profile">
+          <span>J</span>
+        </button>
+      </header>
+
+      <main class="page-content">
+        <!-- Calorie Ring -->
+        <div class="card calorie-card">
+          <div class="calorie-ring-wrap">
+            <svg class="calorie-ring" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+              <circle class="ring-bg" cx="100" cy="100" r="80" />
+              <circle id="ring-progress" class="ring-progress" cx="100" cy="100" r="80" />
+            </svg>
+            <div class="ring-center">
+              <span id="ring-consumed" class="ring-number">0</span>
+              <span class="ring-label">kcal eaten</span>
+              <span id="ring-remaining" class="ring-remaining">2000 left</span>
+            </div>
+          </div>
+          <div class="calorie-meta">
+            <div class="calorie-meta-item">
+              <span class="meta-label">Goal</span>
+              <span id="meta-goal" class="meta-value">2000</span>
+            </div>
+            <div class="calorie-meta-item">
+              <span class="meta-label">Eaten</span>
+              <span id="meta-eaten" class="meta-value">0</span>
+            </div>
+            <div class="calorie-meta-item">
+              <span class="meta-label">Remaining</span>
+              <span id="meta-remaining" class="meta-value">2000</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Macro Pills -->
+        <div class="macro-row">
+          <div class="macro-pill">
+            <div class="macro-pill-header">
+              <span class="macro-name">Protein</span>
+              <span id="macro-protein-val" class="macro-val">0g</span>
+            </div>
+            <div class="macro-bar-track">
+              <div id="macro-protein-bar" class="macro-bar macro-bar-protein" style="width:0%"></div>
+            </div>
+            <span id="macro-protein-goal" class="macro-goal">of 150g</span>
+          </div>
+          <div class="macro-pill">
+            <div class="macro-pill-header">
+              <span class="macro-name">Carbs</span>
+              <span id="macro-carbs-val" class="macro-val">0g</span>
+            </div>
+            <div class="macro-bar-track">
+              <div id="macro-carbs-bar" class="macro-bar macro-bar-carbs" style="width:0%"></div>
+            </div>
+            <span id="macro-carbs-goal" class="macro-goal">of 250g</span>
+          </div>
+          <div class="macro-pill">
+            <div class="macro-pill-header">
+              <span class="macro-name">Fat</span>
+              <span id="macro-fat-val" class="macro-val">0g</span>
+            </div>
+            <div class="macro-bar-track">
+              <div id="macro-fat-bar" class="macro-bar macro-bar-fat" style="width:0%"></div>
+            </div>
+            <span id="macro-fat-goal" class="macro-goal">of 65g</span>
+          </div>
+        </div>
+
+        <!-- Add Meal Button -->
+        <button id="btn-add-meal" class="btn-add-meal" onclick="openModal()">
+          <i data-lucide="plus-circle"></i>
+          Add Meal
+        </button>
+
+        <!-- Meal List -->
+        <section class="meal-section">
+          <h2 class="section-title">Today's Meals</h2>
+          <div id="meal-list" class="meal-list">
+            <div class="empty-state" id="empty-meals">
+              <i data-lucide="utensils"></i>
+              <p>No meals logged yet.</p>
+              <p class="empty-sub">Tap "Add Meal" to get started.</p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- ===== HISTORY PAGE ===== -->
+    <div id="page-history" class="page">
+      <header class="page-header">
+        <h1 class="page-title">History</h1>
+      </header>
+
+      <main class="page-content">
+        <!-- Date Nav -->
+        <div class="date-nav card">
+          <button class="icon-btn" id="hist-prev" onclick="historyNav(-1)" aria-label="Previous day">
+            <i data-lucide="chevron-left"></i>
+          </button>
+          <span id="hist-date-label" class="date-nav-label">Today</span>
+          <button class="icon-btn" id="hist-next" onclick="historyNav(1)" aria-label="Next day">
+            <i data-lucide="chevron-right"></i>
+          </button>
+        </div>
+
+        <!-- History Totals -->
+        <div class="card hist-totals" id="hist-totals">
+          <div class="hist-total-item">
+            <span class="hist-total-val" id="hist-cal">0</span>
+            <span class="hist-total-label">kcal</span>
+          </div>
+          <div class="hist-divider"></div>
+          <div class="hist-total-item">
+            <span class="hist-total-val" id="hist-pro">0g</span>
+            <span class="hist-total-label">protein</span>
+          </div>
+          <div class="hist-divider"></div>
+          <div class="hist-total-item">
+            <span class="hist-total-val" id="hist-carb">0g</span>
+            <span class="hist-total-label">carbs</span>
+          </div>
+          <div class="hist-divider"></div>
+          <div class="hist-total-item">
+            <span class="hist-total-val" id="hist-fat">0g</span>
+            <span class="hist-total-label">fat</span>
+          </div>
+        </div>
+
+        <!-- History Meal List -->
+        <div id="hist-meal-list" class="meal-list">
+          <div class="empty-state" id="hist-empty">
+            <i data-lucide="calendar-x"></i>
+            <p>No meals on this day.</p>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- ===== GOALS PAGE ===== -->
+    <div id="page-goals" class="page">
+      <header class="page-header">
+        <h1 class="page-title">Daily Goals</h1>
+      </header>
+
+      <main class="page-content">
+        <div class="card goals-card">
+          <p class="goals-intro">Set your daily nutrition targets. These guide your progress rings and bars.</p>
+
+          <form id="goals-form" onsubmit="saveGoals(event)">
+            <div class="form-group">
+              <label class="form-label" for="goal-calories">
+                <i data-lucide="zap"></i>
+                Daily Calories
+              </label>
+              <div class="input-wrap">
+                <input type="number" id="goal-calories" class="form-input" min="500" max="10000" placeholder="2000" required />
+                <span class="input-unit">kcal</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="goal-protein">
+                <i data-lucide="beef"></i>
+                Protein
+              </label>
+              <div class="input-wrap">
+                <input type="number" id="goal-protein" class="form-input" min="0" max="500" placeholder="150" required />
+                <span class="input-unit">g</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="goal-carbs">
+                <i data-lucide="wheat"></i>
+                Carbohydrates
+              </label>
+              <div class="input-wrap">
+                <input type="number" id="goal-carbs" class="form-input" min="0" max="1000" placeholder="250" required />
+                <span class="input-unit">g</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="goal-fat">
+                <i data-lucide="droplets"></i>
+                Fat
+              </label>
+              <div class="input-wrap">
+                <input type="number" id="goal-fat" class="form-input" min="0" max="500" placeholder="65" required />
+                <span class="input-unit">g</span>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary btn-full" id="goals-save-btn">
+              <i data-lucide="check"></i>
+              Save Goals
+            </button>
+          </form>
+
+          <div id="goals-saved-msg" class="goals-saved-msg hidden">
+            <i data-lucide="check-circle-2"></i>
+            Goals saved successfully!
+          </div>
+        </div>
+
+        <!-- Current Goals Summary -->
+        <div class="card goals-summary-card" id="goals-summary">
+          <h3 class="goals-summary-title">Current Goals</h3>
+          <div class="goals-summary-grid">
+            <div class="goals-summary-item">
+              <span class="gs-val" id="gs-calories">—</span>
+              <span class="gs-label">Calories</span>
+            </div>
+            <div class="goals-summary-item">
+              <span class="gs-val" id="gs-protein">—</span>
+              <span class="gs-label">Protein</span>
+            </div>
+            <div class="goals-summary-item">
+              <span class="gs-val" id="gs-carbs">—</span>
+              <span class="gs-label">Carbs</span>
+            </div>
+            <div class="goals-summary-item">
+              <span class="gs-val" id="gs-fat">—</span>
+              <span class="gs-label">Fat</span>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- ===== BOTTOM NAV ===== -->
+    <nav class="bottom-nav">
+      <button class="nav-tab active" data-page="dashboard" onclick="navigate('dashboard')">
+        <i data-lucide="home"></i>
+        <span>Home</span>
+      </button>
+      <button class="nav-tab" data-page="history" onclick="navigate('history')">
+        <i data-lucide="calendar"></i>
+        <span>History</span>
+      </button>
+      <button class="nav-tab" data-page="goals" onclick="navigate('goals')">
+        <i data-lucide="target"></i>
+        <span>Goals</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- ===== ADD MEAL MODAL ===== -->
+  <div id="modal-overlay" class="modal-overlay hidden" onclick="handleOverlayClick(event)">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-title">Add Meal</h2>
+        <button class="modal-close" onclick="closeModal()" aria-label="Close">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Step 1: Upload -->
+        <div id="step-upload" class="modal-step">
+          <div
+            id="drop-zone"
+            class="drop-zone"
+            ondragover="handleDragOver(event)"
+            ondragleave="handleDragLeave(event)"
+            ondrop="handleDrop(event)"
+            onclick="triggerFileInput()"
+            role="button"
+            tabindex="0"
+            onkeydown="if(event.key==='Enter'||event.key===' ')triggerFileInput()"
+            aria-label="Upload food photo"
+          >
+            <i data-lucide="image-plus" class="drop-icon"></i>
+            <p class="drop-title">Drop a photo here</p>
+            <p class="drop-sub">or tap to browse</p>
+          </div>
+          <input type="file" id="file-input" accept="image/*" class="hidden" onchange="handleFileSelect(event)" />
+
+          <div class="modal-divider"><span>or</span></div>
+
+          <button class="btn-secondary btn-full" onclick="openCamera()">
+            <i data-lucide="camera"></i>
+            Take a Photo
+          </button>
+
+          <!-- Hidden camera capture input -->
+          <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden" onchange="handleFileSelect(event)" />
+        </div>
+
+        <!-- Step 2: Preview + Analyze -->
+        <div id="step-preview" class="modal-step hidden">
+          <div class="preview-wrap">
+            <img id="img-preview" class="img-preview" alt="Food preview" />
+            <button class="preview-change-btn" onclick="resetUpload()">
+              <i data-lucide="refresh-cw"></i>
+              Change photo
+            </button>
+          </div>
+
+          <button id="btn-analyze" class="btn-primary btn-full" onclick="analyzeFood()">
+            <i data-lucide="scan-line"></i>
+            Analyze Food
+          </button>
+        </div>
+
+        <!-- Step 3: Results + Save -->
+        <div id="step-results" class="modal-step hidden">
+          <div class="results-card">
+            <div class="results-header">
+              <img id="results-thumb" class="results-thumb" alt="" />
+              <div>
+                <div class="results-food-name-wrap">
+                  <input id="results-name" class="results-name-input" type="text" placeholder="Food name" />
+                </div>
+                <div class="results-confidence" id="results-confidence-wrap">
+                  <span class="confidence-dot" id="confidence-dot"></span>
+                  <span id="results-confidence-label">High confidence</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="results-calories-big">
+              <span id="results-calories" class="big-cal-num">—</span>
+              <span class="big-cal-unit">kcal</span>
+            </div>
+
+            <div class="macro-table">
+              <div class="macro-row-item">
+                <span class="macro-row-label">Protein</span>
+                <span id="res-protein" class="macro-row-val protein-color">—</span>
+              </div>
+              <div class="macro-row-item">
+                <span class="macro-row-label">Carbs</span>
+                <span id="res-carbs" class="macro-row-val carbs-color">—</span>
+              </div>
+              <div class="macro-row-item">
+                <span class="macro-row-label">Fat</span>
+                <span id="res-fat" class="macro-row-val fat-color">—</span>
+              </div>
+              <div class="macro-row-item">
+                <span class="macro-row-label">Fiber</span>
+                <span id="res-fiber" class="macro-row-val">—</span>
+              </div>
+              <div class="macro-row-item">
+                <span class="macro-row-label">Sugar</span>
+                <span id="res-sugar" class="macro-row-val">—</span>
+              </div>
+              <div class="macro-row-item">
+                <span class="macro-row-label">Serving</span>
+                <span id="res-serving" class="macro-row-val">—</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Meal type selector -->
+          <div class="meal-type-section">
+            <p class="meal-type-label">Meal Type</p>
+            <div class="meal-type-pills">
+              <button class="meal-type-pill active" data-type="breakfast" onclick="selectMealType('breakfast')">Breakfast</button>
+              <button class="meal-type-pill" data-type="lunch" onclick="selectMealType('lunch')">Lunch</button>
+              <button class="meal-type-pill" data-type="dinner" onclick="selectMealType('dinner')">Dinner</button>
+              <button class="meal-type-pill" data-type="snack" onclick="selectMealType('snack')">Snack</button>
+            </div>
+          </div>
+
+          <button id="btn-save" class="btn-primary btn-full" onclick="saveMeal()">
+            <i data-lucide="check-circle"></i>
+            Save to Log
+          </button>
+
+          <button class="btn-ghost btn-full" onclick="resetUpload()">
+            <i data-lucide="camera"></i>
+            Try different photo
+          </button>
+        </div>
+
+        <!-- Loading overlay (inside modal) -->
+        <div id="modal-loading" class="modal-loading hidden">
+          <div class="spinner"></div>
+          <p class="loading-text">Analyzing your food…</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast hidden" role="alert" aria-live="polite"></div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
